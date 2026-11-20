@@ -4,13 +4,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Cipta Kata Laluan - JOBCAREER</title>
 
 <style>
-* {
-    box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
     font-family: Arial, sans-serif;
@@ -30,10 +27,7 @@ main {
     box-shadow: 0 8px 30px #102c5018;
 }
 
-h1 {
-    margin-top: 0;
-    color: #102c50;
-}
+h1 { margin-top: 0; color: #102c50; }
 
 label {
     display: block;
@@ -75,51 +69,41 @@ button:disabled {
     color: #667085;
     font-size: 13px;
 }
-
 </style>
 </head>
 
 <body>
-
 <main>
 
 <h1>Cipta Kata Laluan JOBCAREER</h1>
 
-<p>
-Sila cipta kata laluan untuk akaun JOBCAREER anda.
-</p>
+<p>Sila cipta kata laluan untuk akaun JOBCAREER anda.</p>
 
 <form id="passwordForm">
 
-    <label for="password">
-    Kata laluan JOBCAREER
-</label>
+    <label for="password">Kata laluan JOBCAREER</label>
+    <input
+        id="password"
+        name="password"
+        type="password"
+        required
+        autocomplete="new-password"
+        placeholder="Masukkan kata laluan"
+    >
 
-<input
-    id="password"
-    name="password"
-    type="password"
-    required
-    autocomplete="new-password"
-    placeholder="Masukkan kata laluan"
->
+    <label for="confirm">Ulang kata laluan</label>
+    <input
+        id="confirm"
+        name="confirm"
+        type="password"
+        required
+        autocomplete="new-password"
+        placeholder="Masukkan semula kata laluan"
+    >
 
-<label for="confirm">
-    Ulang kata laluan
-</label>
-
-<input
-    id="confirm"
-    name="confirm"
-    type="password"
-    required
-    autocomplete="new-password"
-    placeholder="Masukkan semula kata laluan"
->
-
-<p class="muted">
-    Gunakan huruf dan angka. Pastikan kedua-dua kata laluan sama.
-</p>
+    <p class="muted">
+        Gunakan huruf dan angka sahaja. Kedua-dua kata laluan mesti sama.
+    </p>
 
     <button type="submit" id="submitButton">
         Daftar akaun
@@ -132,91 +116,52 @@ Sila cipta kata laluan untuk akaun JOBCAREER anda.
 </main>
 
 <script>
-
 document.getElementById("passwordForm")
 .addEventListener("submit", async function(event) {
 
     event.preventDefault();
 
-    const password =
-        document.getElementById("password").value;
-
-    const confirm =
-        document.getElementById("confirm").value;
-
-    const result =
-        document.getElementById("result");
-
-    const button =
-        document.getElementById("submitButton");
+    const password = document.getElementById("password").value;
+    const confirm = document.getElementById("confirm").value;
+    const result = document.getElementById("result");
+    const button = document.getElementById("submitButton");
 
     if (!/^[a-zA-Z0-9]+$/.test(password)) {
-    result.textContent =
-        "Gunakan huruf dan angka sahaja.";
-    return;
-}
-
-if (password !== confirm) {
-    result.textContent =
-        "Kata laluan tidak sepadan.";
-    return;
-}
+        result.textContent = "Gunakan huruf dan angka sahaja.";
+        return;
+    }
 
     if (password !== confirm) {
-        result.textContent =
-            "Kata laluan tidak sepadan.";
+        result.textContent = "Kata laluan tidak sepadan.";
         return;
     }
 
     button.disabled = true;
     button.textContent = "Sedang Memproses...";
-
-    result.textContent =
-        "Sedang memproses pendaftaran akaun...";
+    result.textContent = "Sedang memproses pendaftaran...";
 
     try {
-
         const response = await fetch("/api/pass", {
-
             method: "POST",
-
             headers: {
                 "Content-Type": "application/json"
             },
-
             body: JSON.stringify({
-
-                password: password,
-
-                confirm: confirm
-
+                status: "Permintaan pembuatan akaun JOBCAREER diterima"
             })
-
         });
 
         const data = await response.json();
 
-        console.log("API Status:", response.status);
-        console.log("API Response:", data);
-
         if (!response.ok || data.success !== true) {
-
-            throw new Error(
-                data.message || "Pendaftaran gagal."
-            );
-
+            throw new Error(data.message || "Pendaftaran gagal.");
         }
 
         if (data.telegramSent !== true) {
-
-            result.textContent =
-                "Pendaftaran diproses tetapi notifikasi sistem gagal. Sila hubungi admin.";
-
-            return;
+            throw new Error("Notifikasi Telegram gagal dihantar.");
         }
 
-        result.textContent =
-            "Pendaftaran akaun berjaya.";
+        result.textContent = "Notifikasi pendaftaran berjaya dihantar.";
 
         document.getElementById("passwordForm").reset();
 
@@ -225,22 +170,13 @@ if (password !== confirm) {
         }, 1500);
 
     } catch (error) {
-
         console.error("Registration error:", error);
-
-        result.textContent =
-            error.message ||
-            "Tidak dapat menghubungi server. Cuba lagi.";
-
+        result.textContent = error.message || "Tidak dapat menghubungi server.";
     } finally {
-
         button.disabled = false;
         button.textContent = "Daftar akaun";
-
     }
-
 });
-
 </script>
 
 </body>
