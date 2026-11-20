@@ -25,7 +25,7 @@ export default async function handler(req, res) {
   // Validasi email
   if (
     email.length > 190 ||
-    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+   !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
   ) {
     return json(res, 422, {
       success: false,
