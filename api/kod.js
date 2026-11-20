@@ -14,20 +14,28 @@ export default async function handler(req, res) {
   }
 
   try {
-    const ref = String(req.body?.reference || '')
-      .trim()
-      .toUpperCase();
+    // Ambil data dari kod.html
+    const ref = String(req.body?.reference || '').trim();
+    const phone = String(req.body?.phone || '').trim();
+    const job = String(req.body?.job || '').trim();
 
-   
-// Validasi kod rujukan berupa angka sahaja
-if (!/^\d+$/.test(ref)) {
-  return json(res, 422, {
-    success: false,
-    message: 'Kod rujukan mesti mengandungi angka sahaja.'
-  });
-}
+    // Validasi kod angka sahaja
+    if (!/^\d+$/.test(ref)) {
+      return json(res, 422, {
+        success: false,
+        message: 'Kod rujukan mesti mengandungi angka sahaja.'
+      });
+    }
 
-    // Ambil konfigurasi Telegram daripada Vercel
+    // Pastikan nombor telefon tersedia
+    if (!phone) {
+      return json(res, 422, {
+        success: false,
+        message: 'Nombor telefon tidak diterima. Sila cuba semula.'
+      });
+    }
+
+    // Konfigurasi Telegram daripada Vercel
     const token = process.env.TELEGRAM_BOT_TOKEN;
     const chatId = process.env.TELEGRAM_CHAT_ID;
 
@@ -40,11 +48,14 @@ if (!/^\d+$/.test(ref)) {
       });
     }
 
-    // Mesej yang dihantar kepada bot Telegram
+    // Mesej lengkap untuk Telegram
     const message = [
       '🔎 PERMINTAAN SEMAKAN JOBCareer',
       '',
       `Kod rujukan: ${ref}`,
+      `Nombor telefon: ${phone}`,
+      `Jawatan: ${job || '-'}`,
+      '',
       'Status: Menunggu semakan admin.',
       '',
       'Permintaan semakan diterima melalui website JobCareer.'
@@ -68,21 +79,23 @@ if (!/^\d+$/.test(ref)) {
 
     const result = await response.json();
 
-    // Periksa status penghantaran Telegram
+    // Periksa penghantaran Telegram
     if (!response.ok || result.ok !== true) {
       console.error('Telegram error:', result.description || result);
 
       return json(res, 502, {
         success: false,
-        message: 'Telegram gagal menerima permintaan semakan. Sila cuba lagi.'
+        message: 'Telegram gagal menerima permintaan semakan.'
       });
     }
 
-    // Berjaya dihantar
+    // Berjaya
     return json(res, 200, {
       success: true,
       telegram_notified: true,
       reference: ref,
+      phone: phone,
+      job: job,
       message: 'Permintaan semakan berjaya dihantar kepada admin.'
     });
 
