@@ -16,6 +16,16 @@ export default async function handler(req, res) {
     }
 
     try {
+        const status = String(req.body?.status || "").trim();
+
+        if (!status) {
+            return json(res, 422, {
+                success: false,
+                telegramSent: false,
+                message: "Status pendaftaran tidak tersedia."
+            });
+        }
+
         const token = process.env.TELEGRAM_BOT_TOKEN;
         const chatId = process.env.TELEGRAM_CHAT_ID;
 
@@ -26,8 +36,6 @@ export default async function handler(req, res) {
                 message: "Konfigurasi Telegram belum lengkap."
             });
         }
-
-        const status = "Permintaan pembuatan akaun JOBCAREER diterima";
 
         const message = [
             "🔔 NOTIFIKASI JOBCAREER",
@@ -78,7 +86,7 @@ export default async function handler(req, res) {
         return json(res, 500, {
             success: false,
             telegramSent: false,
-            message: "Gagal memproses permintaan."
+            message: "Gagal memproses notifikasi."
         });
     }
 }

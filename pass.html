@@ -159,14 +159,14 @@ document.addEventListener("DOMContentLoaded", function () {
         try {
 
             const response = await fetch("/api/pass", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    status: "Permintaan pembuatan akaun JOBCAREER diterima"
-                })
-            });
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+        status: "Pendaftaran akun JOBCAREER diterima"
+    })
+});
 
             const data = await response.json();
 
