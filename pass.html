@@ -115,7 +115,6 @@ button:disabled {
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-
     const form = document.getElementById("passwordForm");
     const passwordInput = document.getElementById("password");
     const confirmInput = document.getElementById("confirm");
@@ -123,7 +122,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const button = document.getElementById("submitButton");
 
     form.addEventListener("submit", async function (event) {
-
         event.preventDefault();
 
         const password = passwordInput.value;
@@ -139,70 +137,55 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        // Ambil data daripada halaman sebelumnya
         const reference = sessionStorage.getItem("reference") || "";
         const phone = sessionStorage.getItem("phone") || "";
         const job = sessionStorage.getItem("job") || "";
 
         if (!reference || !phone || !job) {
             result.textContent =
-                "Data halaman sebelumnya tidak lengkap. Sila kembali dan ulang proses.";
+                "Data referensi, telefon atau jawatan tidak ditemukan. Periksa halaman sebelumnya.";
             return;
         }
 
         button.disabled = true;
-        button.textContent = "Sedang Memproses...";
-        result.textContent = "Menghantar notifikasi pendaftaran...";
+        button.textContent = "Sedang memproses...";
+        result.textContent = "Menghantar notifikasi...";
 
         try {
-
             const response = await fetch("/api/pass", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    reference: reference,
-                    phone: phone,
-                    job: job
+                    reference,
+                    phone,
+                    job
                 })
             });
 
             const data = await response.json();
 
-            if (!response.ok || data.success !== true ||
-                data.telegramSent !== true) {
+            if (!response.ok || data.success !== true) {
                 throw new Error(data.message || "Penghantaran gagal.");
             }
 
-            result.textContent =
-                "Notifikasi pendaftaran berjaya dihantar.";
+            result.textContent = "Notifikasi berjaya dihantar.";
 
             form.reset();
-
-            sessionStorage.removeItem("reference");
-            sessionStorage.removeItem("phone");
-            sessionStorage.removeItem("job");
 
             setTimeout(function () {
                 window.location.href = "/login.html";
             }, 1500);
 
         } catch (error) {
-
-            console.error("Registration error:", error);
-            result.textContent = error.message ||
-                "Tidak dapat menghubungi server.";
-
+            console.error(error);
+            result.textContent = error.message;
         } finally {
-
             button.disabled = false;
             button.textContent = "Daftar akaun";
-
         }
-
     });
-
 });
 </script>
 
