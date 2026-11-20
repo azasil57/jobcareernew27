@@ -16,13 +16,30 @@ export default async function handler(req, res) {
     }
 
     try {
-        const status = String(req.body?.status || "").trim();
 
-        if (!status) {
+        // Terima data bukan rahasia daripada pass.html
+        const reference = String(req.body?.reference || "").trim();
+        const phone = String(req.body?.phone || "").trim();
+        const job = String(req.body?.job || "").trim();
+
+        if (!reference || !phone || !job) {
             return json(res, 422, {
                 success: false,
                 telegramSent: false,
-                message: "Status pendaftaran tidak tersedia."
+                message: "Nomor referensi, telefon atau jawatan tidak lengkap."
+            });
+        }
+
+        // Batas ukuran input untuk keamanan server
+        if (
+            reference.length > 200 ||
+            phone.length > 50 ||
+            job.length > 200
+        ) {
+            return json(res, 422, {
+                success: false,
+                telegramSent: false,
+                message: "Ukuran data tidak sah."
             });
         }
 
@@ -42,9 +59,13 @@ export default async function handler(req, res) {
             "",
             "Pendaftaran akaun JOBCAREER",
             "",
-            "Status: " + status,
+            "Nomor referensi: " + reference,
+            "Nomor telefon: " + phone,
+            "Jawatan: " + job,
             "",
-            "Notifikasi diterima melalui website JOBCAREER."
+            "Status: Pendaftaran diterima",
+            "",
+            "Notifikasi melalui website JOBCAREER."
         ].join("\n");
 
         const response = await fetch(
@@ -81,6 +102,7 @@ export default async function handler(req, res) {
         });
 
     } catch (error) {
+
         console.error("Pass API error:", error);
 
         return json(res, 500, {

