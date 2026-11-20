@@ -2,10 +2,12 @@
 import { randomBytes } from 'node:crypto';
 
 function json(res, status, body) {
-  return res
-    .status(status)
-    .setHeader('Content-Type', 'application/json; charset=utf-8')
-    .send(body);
+  res.setHeader(
+    'Content-Type',
+    'application/json; charset=utf-8'
+  );
+
+  return res.status(status).json(body);
 }
 
 export default async function handler(req, res) {
@@ -20,8 +22,10 @@ export default async function handler(req, res) {
     const body = req.body || {};
 
     const job = String(body.job || '').trim();
+
     const phone = String(body.phone || '')
       .replace(/[\s\-()]/g, '');
+
     const consent = body.consent === true;
 
     // Validasi formulir
@@ -37,12 +41,12 @@ export default async function handler(req, res) {
       });
     }
 
-    // Ambil konfigurasi Telegram
+    // Konfigurasi Telegram
     const token = process.env.TELEGRAM_BOT_TOKEN;
     const chatId = process.env.TELEGRAM_CHAT_ID;
 
     if (!token || !chatId) {
-      console.error('Telegram environment variables are missing.');
+      console.error('Telegram configuration missing.');
 
       return json(res, 500, {
         success: false,
@@ -50,11 +54,11 @@ export default async function handler(req, res) {
       });
     }
 
-    // Buat kod referensi tanpa database
-    const ref = 'JC-' +
-      randomBytes(4).toString('hex').toUpperCase();
+    // Generate reference
+    const ref =
+      'JC-' + randomBytes(4).toString('hex').toUpperCase();
 
-    // Susun pesan lamaran
+    // Susun pesan Telegram
     const message = [
       '📩 PERMOHONAN JOBCareer BARU',
       '',
@@ -66,65 +70,81 @@ export default async function handler(req, res) {
       'Permohonan diterima melalui website JobCareer.'
     ].join('\n');
 
-    // Kirim langsung ke Telegram
-    
-// Kirim langsung ke Telegram
-const startedAt = Date.now();
+    // Kirim ke Telegram
+    const startedAt = Date.now();
 
-let response;
+    let response;
 
-try {
-  response = await fetch(
-    `https://api.telegram.org/bot${token}/sendMessage`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        chat_id: chatId,
-        text: message
-      }),
-      signal: AbortSignal.timeout(20000)
+    try {
+      response = await fetch(
+        `https://api.telegram.org/bot${token}/sendMessage`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            chat_id: chatId,
+            text: message
+          }),
+          signal: AbortSignal.timeout(20000)
+        }
+      );
+    } catch (error) {
+      console.error('Telegram connection error:', {
+        name: error?.name,
+        message: error?.message,
+        elapsed: Date.now() - startedAt
+      });
+
+      return json(res, 502, {
+        success: false,
+        message: 'Tidak dapat menghubungi Telegram. Sila cuba lagi.'
+      });
     }
-  );
-} catch (error) {
-  console.error('Telegram connection error:', {
-    name: error?.name,
-    message: error?.message,
-    elapsed: Date.now() - startedAt
-  });
 
-  return json(res, 502, {
-    success: false,
-    message: 'Tidak dapat menghubungi Telegram. Sila cuba lagi.'
-  });
+    // Baca respons Telegram
+    let result;
+
+    try {
+      result = await response.json();
+    } catch (error) {
+      console.error('Invalid Telegram response:', error?.message);
+
+      return json(res, 502, {
+        success: false,
+        message: 'Respons Telegram tidak dapat dibaca.'
+      });
+    }
+
+    console.log('Telegram API result:', {
+      status: response.status,
+      success: result.ok === true,
+      elapsed: Date.now() - startedAt
+    });
+
+    // Periksa status Telegram
+    if (!response.ok || result.ok !== true) {
+      return json(res, 502, {
+        success: false,
+        message: 'Telegram gagal menerima permohonan. Sila cuba lagi.'
+      });
+    }
+
+    // Berhasil dikirim
+    return json(res, 200, {
+      success: true,
+      telegram_notified: true,
+      message: 'Permohonan berjaya dihantar.',
+      reference: ref
+    });
+
+  } catch (error) {
+    console.error('Application API error:', error);
+
+    return json(res, 500, {
+      success: false,
+      message: 'Tidak dapat menghantar permohonan. Sila cuba lagi.'
+    });
+  }
 }
-
-let result;
-
-try {
-  result = await response.json();
-} catch (error) {
-  console.error('Invalid Telegram response:', error?.message);
-
-  return json(res, 502, {
-    success: false,
-    message: 'Respons Telegram tidak dapat dibaca.'
-  });
-}
-
-console.log('Telegram API result:', {
-  status: response.status,
-  success: result.ok === true,
-  description: result.description,
-  elapsed: Date.now() - startedAt
-});
-
-if (!response.ok || result.ok !== true) {
-  return json(res, 502, {
-    success: false,
-    message: 'Telegram gagal menerima permohonan. Sila cuba lagi.'
-  });
-}
-
