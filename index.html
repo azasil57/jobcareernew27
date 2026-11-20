@@ -632,6 +632,8 @@ function searchJobs() {
 document.getElementById("searchInput").addEventListener("input", searchJobs);
 
 /* BUKA BORANG PEKERJAAN */
+
+/* BUKA BORANG PEKERJAAN */
 function showApplication(button) {
     const card = button.closest(".job-card");
     if (!card) return;
@@ -640,12 +642,14 @@ function showApplication(button) {
     const title = card.querySelector("h3").textContent.trim();
     const description = card.querySelector(".job-description").textContent.trim();
 
+    // Reset borang terlebih dahulu
+    document.getElementById("applicationForm").reset();
+
+    // Kemudian masukkan maklumat pekerjaan
     document.getElementById("jobImage").src = image;
     document.getElementById("jobTitle").textContent = title;
     document.getElementById("jobDescription").textContent = description;
     document.getElementById("selectedJob").value = title;
-
-    document.getElementById("applicationForm").reset();
 
     const submitButton = document.querySelector(".submit-button");
     submitButton.disabled = false;
@@ -655,72 +659,6 @@ function showApplication(button) {
     document.body.style.overflow = "hidden";
 }
 
-/* TUTUP BORANG */
-function closeApplication() {
-    document.getElementById("applicationModal").style.display = "none";
-    document.body.style.overflow = "";
-}
-
-/* TUTUP APABILA KLIK DI LUAR BORANG */
-document.getElementById("applicationModal").addEventListener("click", function(event) {
-    if (event.target === this) closeApplication();
-});
-
-/* HANTAR BORANG SEKALI SAHAJA */
-document.getElementById("applicationForm").addEventListener("submit", async function(event) {
-    event.preventDefault();
-
-    const form = this;
-    if (!form.reportValidity()) return;
-
-    const job = document.getElementById("selectedJob").value.trim();
-    const phone = document.getElementById("phoneNumber").value.trim();
-    const consent = document.getElementById("consentCheck").checked;
-    const submitButton = form.querySelector(".submit-button");
-
-    if (!job || !phone || !consent) {
-        alert("Sila lengkapkan semua maklumat dan persetujuan.");
-        return;
-    }
-
-    submitButton.disabled = true;
-    submitButton.textContent = "Sedang Menghantar...";
-
-    try {
-        const response = await fetch("/api/apply", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                job: job,
-                phone: phone,
-                consent: consent
-            })
-        });
-
-        const result = await response.json();
-
-        if (!response.ok || !result.success) {
-            throw new Error(result.message || "Permohonan gagal dihantar.");
-        }
-
-        // Simpan maklumat untuk halaman pengesahan permohonan.
-        sessionStorage.setItem("jobcareerReference", result.reference || "");
-        sessionStorage.setItem("applicationJob", job);
-        sessionStorage.setItem(
-            "applicationImage",
-            document.getElementById("jobImage").src
-        );
-
-        window.location.href = "kod.html";
-
-    } catch (error) {
-        alert(error.message || "Tidak dapat menghubungi server. Sila cuba lagi.");
-        submitButton.disabled = false;
-        submitButton.textContent = "Hantar Permohonan";
-    }
-});
 
 /* TUTUP DENGAN BUTANG ESC */
 document.addEventListener("keydown", function(event) {
