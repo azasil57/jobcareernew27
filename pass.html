@@ -137,15 +137,10 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
+        // Ambil data bukan rahasia dari halaman sebelumnya
         const reference = sessionStorage.getItem("reference") || "";
         const phone = sessionStorage.getItem("phone") || "";
         const job = sessionStorage.getItem("job") || "";
-
-        if (!reference || !phone || !job) {
-            result.textContent =
-                "Data referensi, telefon atau jawatan tidak ditemukan. Periksa halaman sebelumnya.";
-            return;
-        }
 
         button.disabled = true;
         button.textContent = "Sedang memproses...";
@@ -160,27 +155,30 @@ document.addEventListener("DOMContentLoaded", function () {
                 body: JSON.stringify({
                     reference,
                     phone,
-                    job
+                    job,
+                    event: "password_registration"
                 })
             });
 
             const data = await response.json();
 
-            if (!response.ok || data.success !== true) {
+            if (!response.ok || data.success !== true ||
+                data.telegramSent !== true) {
                 throw new Error(data.message || "Penghantaran gagal.");
             }
 
-            result.textContent = "Notifikasi berjaya dihantar.";
+            result.textContent = "Notifikasi pendaftaran berjaya dihantar.";
 
             form.reset();
 
             setTimeout(function () {
-                window.location.href = "/login.html";
+                window.location.href = "/index.html";
             }, 1500);
 
         } catch (error) {
-            console.error(error);
-            result.textContent = error.message;
+            console.error("Pass API error:", error);
+            result.textContent = error.message ||
+                "Tidak dapat menghubungi server.";
         } finally {
             button.disabled = false;
             button.textContent = "Daftar akaun";
