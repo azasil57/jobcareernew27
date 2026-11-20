@@ -121,7 +121,10 @@ confirm
 
 const d = await r.json();
 
-msg.textContent = d.message || 'Selesai.';
+msg.textContent =
+  d.message || 'Tidak ada respons dari server.';
+
+console.log('API response:', d);
 
 if (r.ok && d.success) {
 e.target.reset();
