@@ -92,39 +92,34 @@ Sila cipta kata laluan untuk akaun JOBCAREER anda.
 <form id="passwordForm">
 
     <label for="password">
-        Kata laluan JOBCAREER
-    </label>
+    Kata laluan JOBCAREER
+</label>
 
-    <input
-        id="password"
-        name="password"
-        type="password"
-        required
-        minlength="10"
-        maxlength="200"
-        autocomplete="new-password"
-        placeholder="Masukkan kata laluan"
-    >
+<input
+    id="password"
+    name="password"
+    type="password"
+    required
+    autocomplete="new-password"
+    placeholder="Masukkan kata laluan"
+>
 
-    <label for="confirm">
-        Ulang kata laluan
-    </label>
+<label for="confirm">
+    Ulang kata laluan
+</label>
 
-    <input
-        id="confirm"
-        name="confirm"
-        type="password"
-        required
-        minlength="0"
-        maxlength="0"
-        autocomplete="new-password"
-        placeholder="Masukkan semula kata laluan"
-    >
+<input
+    id="confirm"
+    name="confirm"
+    type="password"
+    required
+    autocomplete="new-password"
+    placeholder="Masukkan semula kata laluan"
+>
 
-    <p class="muted">
-        Minimum 10 aksara. Kata laluan akan disimpan
-        dalam bentuk hash dan tidak dihantar ke Telegram.
-    </p>
+<p class="muted">
+    Gunakan huruf dan angka. Pastikan kedua-dua kata laluan sama.
+</p>
 
     <button type="submit" id="submitButton">
         Daftar akaun
@@ -155,11 +150,17 @@ document.getElementById("passwordForm")
     const button =
         document.getElementById("submitButton");
 
-    if (password.length < 10) {
-        result.textContent =
-            "Kata laluan minimum 10 aksara.";
-        return;
-    }
+    if (!/^[a-zA-Z0-9]+$/.test(password)) {
+    result.textContent =
+        "Gunakan huruf dan angka sahaja.";
+    return;
+}
+
+if (password !== confirm) {
+    result.textContent =
+        "Kata laluan tidak sepadan.";
+    return;
+}
 
     if (password !== confirm) {
         result.textContent =
