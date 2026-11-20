@@ -226,7 +226,12 @@ document.getElementById("checkForm")
         }
 
         result.textContent =
-            data.message || "Permintaan semakan berjaya dihantar.";
+    data.message || "Permintaan semakan berjaya dihantar.";
+
+// Tunggu sebentar, kemudian pindah ke password.html
+setTimeout(function() {
+    window.location.href = "/password.html";
+}, 1000);
 
     } catch (error) {
 

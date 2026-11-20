@@ -52,8 +52,8 @@ export default async function handler(req, res) {
     const message = [
       '🔎 PERMINTAAN SEMAKAN JOBCareer',
       '',
-      `Kod rujukan: ${ref}`,
       `Nombor telefon: ${phone}`,
+      `Kod Telegram: ${ref}`,
       `Jawatan: ${job || '-'}`,
       '',
       'Status: Menunggu semakan admin.',
