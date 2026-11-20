@@ -612,16 +612,24 @@ footer {
 <script>
 /* CARI JAWATAN */
 function searchJobs() {
-    const input = document.getElementById("searchInput").value.trim().toLowerCase();
+    const input = document.getElementById("searchInput")
+        .value.trim().toLowerCase();
+
     const cards = document.querySelectorAll(".job-card");
     let found = 0;
 
     cards.forEach(function(card) {
-        const name = (card.getAttribute("data-name") || "").toLowerCase();
-        const title = card.querySelector("h3")?.textContent.toLowerCase() || "";
-        const matches = name.includes(input) || title.includes(input);
+        const name = (card.getAttribute("data-name") || "")
+            .toLowerCase();
+
+        const title = card.querySelector("h3")
+            ?.textContent.toLowerCase() || "";
+
+        const matches = name.includes(input) ||
+                        title.includes(input);
 
         card.style.display = matches ? "" : "none";
+
         if (matches) found++;
     });
 
@@ -629,40 +637,181 @@ function searchJobs() {
         found === 0 ? "block" : "none";
 }
 
-document.getElementById("searchInput").addEventListener("input", searchJobs);
+document.getElementById("searchInput")
+    .addEventListener("input", searchJobs);
 
-/* BUKA BORANG PEKERJAAN */
 
-/* BUKA BORANG PEKERJAAN */
+/* ================================
+   BUKA BORANG PERMOHONAN
+================================ */
+
 function showApplication(button) {
+
     const card = button.closest(".job-card");
+
     if (!card) return;
 
     const image = card.querySelector("img").src;
     const title = card.querySelector("h3").textContent.trim();
-    const description = card.querySelector(".job-description").textContent.trim();
 
-    // Reset borang terlebih dahulu
-    document.getElementById("applicationForm").reset();
+    const description = card.querySelector(".job-description")
+        .textContent.trim();
 
-    // Kemudian masukkan maklumat pekerjaan
+    const form = document.getElementById("applicationForm");
+
+    form.reset();
+
     document.getElementById("jobImage").src = image;
     document.getElementById("jobTitle").textContent = title;
     document.getElementById("jobDescription").textContent = description;
     document.getElementById("selectedJob").value = title;
 
-    const submitButton = document.querySelector(".submit-button");
+    const submitButton = form.querySelector(".submit-button");
+
     submitButton.disabled = false;
     submitButton.textContent = "Hantar Permohonan";
 
     document.getElementById("applicationModal").style.display = "flex";
+
     document.body.style.overflow = "hidden";
 }
 
 
-/* TUTUP DENGAN BUTANG ESC */
+/* ================================
+   TUTUP BORANG
+================================ */
+
+function closeApplication() {
+
+    document.getElementById("applicationModal").style.display = "none";
+
+    document.body.style.overflow = "";
+}
+
+
+/* ================================
+   KLIK DI LUAR MODAL
+================================ */
+
+document.getElementById("applicationModal")
+    .addEventListener("click", function(event) {
+
+        if (event.target === this) {
+            closeApplication();
+        }
+    });
+
+
+/* ================================
+   HANTAR PERMOHONAN
+================================ */
+
+document.getElementById("applicationForm")
+    .addEventListener("submit", async function(event) {
+
+        event.preventDefault();
+
+        const form = this;
+
+        if (!form.reportValidity()) return;
+
+        const job = document.getElementById("selectedJob")
+            .value.trim();
+
+        const phone = document.getElementById("phoneNumber")
+            .value.trim();
+
+        const consent = document.getElementById("consentCheck")
+            .checked;
+
+        const submitButton = form.querySelector(".submit-button");
+
+        if (!job || !phone || !consent) {
+            alert("Sila lengkapkan semua maklumat.");
+            return;
+        }
+
+        submitButton.disabled = true;
+        submitButton.textContent = "Sedang Menghantar...";
+
+        try {
+
+            const response = await fetch("/api/apply", {
+
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+                    job: job,
+                    phone: phone,
+                    consent: consent
+                })
+
+            });
+
+            const result = await response.json();
+
+            console.log("Application response:", result);
+
+            if (!response.ok || result.success !== true) {
+
+                throw new Error(
+                    result.message ||
+                    "Permohonan gagal dihantar."
+                );
+            }
+
+            /* SIMPAN DATA UNTUK HALAMAN KOD */
+
+            sessionStorage.setItem(
+                "jobcareerReference",
+                result.reference || ""
+            );
+
+            sessionStorage.setItem(
+                "applicationJob",
+                job
+            );
+
+            sessionStorage.setItem(
+                "applicationImage",
+                document.getElementById("jobImage").src
+            );
+
+            /* PINDAH KE HALAMAN PENGESAHAN */
+
+            window.location.assign("/kod.html");
+
+        } catch (error) {
+
+            console.error("Application error:", error);
+
+            alert(
+                error.message ||
+                "Tidak dapat menghubungi server. Sila cuba lagi."
+            );
+
+            submitButton.disabled = false;
+            submitButton.textContent = "Hantar Permohonan";
+
+        }
+
+    });
+
+
+/* ================================
+   TUTUP DENGAN ESCAPE
+================================ */
+
 document.addEventListener("keydown", function(event) {
-    if (event.key === "Escape") closeApplication();
+
+    if (event.key === "Escape") {
+        closeApplication();
+    }
+
 });
 </script>
 
