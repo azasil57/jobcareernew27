@@ -127,6 +127,10 @@ const d = await r.json();
 msg.textContent =
   d.message || 'Tidak ada respons dari server.';
 
+console.log('Status HTTP:', r.status);
+console.log('API response:', d);
+console.log('Telegram sent:', d.telegramSent);
+
 console.log('API response:', d);
 
 if (r.ok && d.success) {
