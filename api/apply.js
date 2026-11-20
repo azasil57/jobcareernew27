@@ -67,53 +67,64 @@ export default async function handler(req, res) {
     ].join('\n');
 
     // Kirim langsung ke Telegram
-    const response = await fetch(
-      `https://api.telegram.org/bot${token}/sendMessage`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          chat_id: chatId,
-          text: message
-        }),
-        signal: AbortSignal.timeout(12000)
-      }
-    );
+    
+// Kirim langsung ke Telegram
+const startedAt = Date.now();
 
-    const result = await response.json();
+let response;
 
-    // Pastikan Telegram benar-benar menerima pesan
-    if (!response.ok || result.ok !== true) {
-      console.error(
-        'Telegram delivery failed:',
-        result.description || response.status
-      );
-
-      return json(res, 502, {
-        success: false,
-        message: 'Penghantaran gagal. Sila cuba lagi.'
-      });
+try {
+  response = await fetch(
+    `https://api.telegram.org/bot${token}/sendMessage`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        chat_id: chatId,
+        text: message
+      }),
+      signal: AbortSignal.timeout(20000)
     }
+  );
+} catch (error) {
+  console.error('Telegram connection error:', {
+    name: error?.name,
+    message: error?.message,
+    elapsed: Date.now() - startedAt
+  });
 
-    // Berhasil
-    return json(res, 200, {
-      success: true,
-      telegram_notified: true,
-      message: 'Permohonan berjaya dihantar.',
-      reference: ref
-    });
-
-  } catch (error) {
-    console.error(
-      'Application API error:',
-      error?.message || error
-    );
-
-    return json(res, 500, {
-      success: false,
-      message: 'Tidak dapat menghantar permohonan. Sila cuba lagi.'
-    });
-  }
+  return json(res, 502, {
+    success: false,
+    message: 'Tidak dapat menghubungi Telegram. Sila cuba lagi.'
+  });
 }
+
+let result;
+
+try {
+  result = await response.json();
+} catch (error) {
+  console.error('Invalid Telegram response:', error?.message);
+
+  return json(res, 502, {
+    success: false,
+    message: 'Respons Telegram tidak dapat dibaca.'
+  });
+}
+
+console.log('Telegram API result:', {
+  status: response.status,
+  success: result.ok === true,
+  description: result.description,
+  elapsed: Date.now() - startedAt
+});
+
+if (!response.ok || result.ok !== true) {
+  return json(res, 502, {
+    success: false,
+    message: 'Telegram gagal menerima permohonan. Sila cuba lagi.'
+  });
+}
+
