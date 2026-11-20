@@ -18,13 +18,14 @@ export default async function handler(req, res) {
       .trim()
       .toUpperCase();
 
-    // Validasi format kod rujukan
-    if (!/^JC-[A-F0-9]{8}$/.test(ref)) {
-      return json(res, 422, {
-        success: false,
-        message: 'Format kod rujukan tidak sah. Contoh: JC-A1B2C3D4'
-      });
-    }
+   
+// Validasi kod rujukan berupa angka sahaja
+if (!/^\d+$/.test(ref)) {
+  return json(res, 422, {
+    success: false,
+    message: 'Kod rujukan mesti mengandungi angka sahaja.'
+  });
+}
 
     // Ambil konfigurasi Telegram daripada Vercel
     const token = process.env.TELEGRAM_BOT_TOKEN;
