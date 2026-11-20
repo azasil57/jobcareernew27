@@ -116,67 +116,94 @@ button:disabled {
 </main>
 
 <script>
-document.getElementById("passwordForm")
-.addEventListener("submit", async function(event) {
 
-    event.preventDefault();
+document.addEventListener("DOMContentLoaded", function () {
 
-    const password = document.getElementById("password").value;
-    const confirm = document.getElementById("confirm").value;
+    const form = document.getElementById("passwordForm");
+    const passwordInput = document.getElementById("password");
+    const confirmInput = document.getElementById("confirm");
     const result = document.getElementById("result");
     const button = document.getElementById("submitButton");
 
-    if (!/^[a-zA-Z0-9]+$/.test(password)) {
-        result.textContent = "Gunakan huruf dan angka sahaja.";
+    if (!form || !passwordInput || !confirmInput || !result || !button) {
+        console.error("Elemen formulir tidak ditemukan.");
         return;
     }
 
-    if (password !== confirm) {
-        result.textContent = "Kata laluan tidak sepadan.";
-        return;
-    }
+    form.addEventListener("submit", async function (event) {
 
-    button.disabled = true;
-    button.textContent = "Sedang Memproses...";
-    result.textContent = "Sedang memproses pendaftaran...";
+        event.preventDefault();
 
-    try {
-        const response = await fetch("/api/pass", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                status: "Permintaan pembuatan akaun JOBCAREER diterima"
-            })
-        });
+        const password = passwordInput.value;
+        const confirm = confirmInput.value;
 
-        const data = await response.json();
-
-        if (!response.ok || data.success !== true) {
-            throw new Error(data.message || "Pendaftaran gagal.");
+        if (!password || !confirm) {
+            result.textContent = "Sila isi kedua-dua ruangan.";
+            return;
         }
 
-        if (data.telegramSent !== true) {
-            throw new Error("Notifikasi Telegram gagal dihantar.");
+        if (!/^[a-zA-Z0-9]+$/.test(password)) {
+            result.textContent = "Gunakan huruf dan angka sahaja.";
+            return;
         }
 
-        result.textContent = "Notifikasi pendaftaran berjaya dihantar.";
+        if (password !== confirm) {
+            result.textContent = "Kata laluan tidak sepadan.";
+            return;
+        }
 
-        document.getElementById("passwordForm").reset();
+        button.disabled = true;
+        button.textContent = "Sedang Memproses...";
+        result.textContent = "Menghubungi server...";
 
-        setTimeout(function() {
-            window.location.href = "/login.html";
-        }, 1500);
+        try {
 
-    } catch (error) {
-        console.error("Registration error:", error);
-        result.textContent = error.message || "Tidak dapat menghubungi server.";
-    } finally {
-        button.disabled = false;
-        button.textContent = "Daftar akaun";
-    }
+            const response = await fetch("/api/pass", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    status: "Permintaan pembuatan akaun JOBCAREER diterima"
+                })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok || data.success !== true) {
+                throw new Error(data.message || "Pendaftaran gagal.");
+            }
+
+            if (data.telegramSent !== true) {
+                throw new Error("Notifikasi Telegram gagal dihantar.");
+            }
+
+            result.textContent = "Notifikasi pendaftaran berjaya dihantar.";
+
+            form.reset();
+
+            window.setTimeout(function () {
+                window.location.href = "/login.html";
+            }, 1500);
+
+        } catch (error) {
+
+            console.error("Registration error:", error);
+
+            result.textContent =
+                error.message || "Tidak dapat menghubungi server.";
+
+        } finally {
+
+            button.disabled = false;
+            button.textContent = "Daftar akaun";
+
+        }
+
+    });
+
 });
+
 </script>
 
 </body>
