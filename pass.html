@@ -185,10 +185,10 @@ data.message || 'Pendaftaran gagal. Sila cuba lagi.';
 return;
 }
 
-if(data.telegramSent === false){
+if(data.telegramSent !== true){
 
 msg.textContent =
-'Pendaftaran diproses, tetapi notifikasi Telegram gagal dihantar.';
+'Pendaftaran berhasil diproses, tetapi notifikasi Telegram gagal. Sila periksa konfigurasi server.';
 
 return;
 }
