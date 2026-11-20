@@ -1,4 +1,3 @@
-
 import { randomBytes } from 'node:crypto';
 
 function json(res, status, body) {
@@ -6,7 +5,6 @@ function json(res, status, body) {
     'Content-Type',
     'application/json; charset=utf-8'
   );
-
   return res.status(status).json(body);
 }
 
@@ -20,12 +18,9 @@ export default async function handler(req, res) {
 
   try {
     const body = req.body || {};
-
     const job = String(body.job || '').trim();
-
     const phone = String(body.phone || '')
       .replace(/[\s\-()]/g, '');
-
     const consent = body.consent === true;
 
     // Validasi formulir
@@ -47,7 +42,6 @@ export default async function handler(req, res) {
 
     if (!token || !chatId) {
       console.error('Telegram configuration missing.');
-
       return json(res, 500, {
         success: false,
         message: 'Konfigurasi Telegram belum lengkap.'
@@ -55,8 +49,7 @@ export default async function handler(req, res) {
     }
 
     // Generate reference
-    const ref =
-      'JC-' + randomBytes(4).toString('hex').toUpperCase();
+    const ref = 'JC-' + randomBytes(4).toString('hex').toUpperCase();
 
     // Susun pesan Telegram
     const message = [
@@ -64,15 +57,14 @@ export default async function handler(req, res) {
       '',
       `Jawatan: ${job}`,
       `Telefon: ${phone}`,
-      `Kod rujukan: ${ref}`,
       'Persetujuan: Diberikan',
       '',
-      'Permohonan diterima melalui website JobCareer.'
+      'Permohonan diterima melalui website JobCareer.',
+      `No. Rujukan: ${ref}`
     ].join('\n');
 
     // Kirim ke Telegram
     const startedAt = Date.now();
-
     let response;
 
     try {
@@ -80,9 +72,7 @@ export default async function handler(req, res) {
         `https://api.telegram.org/bot${token}/sendMessage`,
         {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             chat_id: chatId,
             text: message
@@ -96,7 +86,6 @@ export default async function handler(req, res) {
         message: error?.message,
         elapsed: Date.now() - startedAt
       });
-
       return json(res, 502, {
         success: false,
         message: 'Tidak dapat menghubungi Telegram. Sila cuba lagi.'
@@ -105,12 +94,10 @@ export default async function handler(req, res) {
 
     // Baca respons Telegram
     let result;
-
     try {
       result = await response.json();
     } catch (error) {
       console.error('Invalid Telegram response:', error?.message);
-
       return json(res, 502, {
         success: false,
         message: 'Respons Telegram tidak dapat dibaca.'
@@ -123,7 +110,6 @@ export default async function handler(req, res) {
       elapsed: Date.now() - startedAt
     });
 
-    // Periksa status Telegram
     if (!response.ok || result.ok !== true) {
       return json(res, 502, {
         success: false,
@@ -141,7 +127,6 @@ export default async function handler(req, res) {
 
   } catch (error) {
     console.error('Application API error:', error);
-
     return json(res, 500, {
       success: false,
       message: 'Tidak dapat menghantar permohonan. Sila cuba lagi.'

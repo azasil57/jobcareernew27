@@ -186,9 +186,15 @@ body {
     color: #c0392b;
     display: none;
     text-align: center;
-    padding: 8px;
+    padding: 10px;
     background: #fdecea;
     border-radius: 6px;
+    line-height: 1.5;
+}
+
+.application-status.success {
+    color: #16a34a;
+    background: #dcfce7;
 }
 
 .success-box {
@@ -224,6 +230,16 @@ body {
     font-size: 13px;
     color: #64748b;
 }
+
+.reference-id {
+    background: #f1f5f9;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 14px;
+    margin-top: 10px;
+    display: inline-block;
+}
 </style>
 </head>
 <body>
@@ -235,11 +251,11 @@ body {
     </div>
 
     <div class="application-content">
-        
-        <p id="jobDescription" class="application-description">Untuk mendaftar sila log masuk menggunakan akaun Telegram. Kami akan menghantar pautan untuk melengkapkan sesi permohonan anda yang telah disiapkan.</p>
+        <h3 id="jobTitle">Pembantu Tadbir Pejabat</h3>
+        <p id="jobDescription" class="application-description">Untuk mendaftar sila lengkapkan maklumat di bawah. Kami akan menghantar pautan untuk melengkapkan sesi permohonan anda yang telah disiapkan.</p>
 
         <form id="applicationForm">
-            <input type="hidden" id="selectedJob" name="job">
+            <input type="hidden" id="selectedJob" name="job" value="Pembantu Tadbir Pejabat">
 
             <label class="form-label" for="phoneNumber">Nombor Telefon Malaysia</label>
             <div class="phone-wrapper">
@@ -252,7 +268,6 @@ body {
                     placeholder="Contoh: 123456789"
                     inputmode="tel"
                     autocomplete="tel"
-                    pattern="1[0-9]{7,9}"
                     required
                 >
             </div>
@@ -264,7 +279,7 @@ body {
 
             <p id="applicationStatus" class="application-status" role="status"></p>
 
-            <button type="submit" class="submit-button">
+            <button type="submit" class="submit-button" id="submitBtn">
                 Hantar Permohonan
             </button>
         </form>
@@ -273,85 +288,90 @@ body {
             <div class="success-icon">✓</div>
             <h4>Permohonan Dihantar!</h4>
             <p>Terima kasih. Kami akan menghubungi anda sebentar lagi.</p>
+            <span class="reference-id" id="refDisplay"></span>
         </div>
     </div>
 </div>
 
 <script>
-// Boleh tukar nama jawatan & keterangan di sini
-const DEFAULT_JOB_TITLE = "Pembantu Tadbir Pejabat";
-const DEFAULT_JOB_DESC = "Untuk mendaftar sila log masuk menggunakan akaun Telegram. Kami akan menghantar pautan untuk melengkapkan sesi permohonan anda yang telah disiapkan.";
+const form = document.getElementById("applicationForm");
+const submitBtn = document.getElementById("submitBtn");
+const statusBox = document.getElementById("applicationStatus");
+const successBox = document.getElementById("successBox");
+const refDisplay = document.getElementById("refDisplay");
 
-document.addEventListener("DOMContentLoaded", function() {
-    document.getElementById("jobTitle").textContent = DEFAULT_JOB_TITLE;
-    document.getElementById("jobDescription").textContent = DEFAULT_JOB_DESC;
-    document.getElementById("selectedJob").value = DEFAULT_JOB_TITLE;
-});
+form.addEventListener("submit", async function(event) {
+    event.preventDefault();
 
-/* HANTAR PERMOHONAN */
-document.getElementById("applicationForm")
-    .addEventListener("submit", async function(event) {
+    // Ambil nilai
+    const job = document.getElementById("selectedJob").value.trim();
+    const phoneInput = document.getElementById("phoneNumber").value.trim();
+    const consent = document.getElementById("consentCheck").checked;
 
-        event.preventDefault();
+    // Gabungkan dengan +60
+    const fullPhone = '60' + phoneInput;
 
-        const form = this;
+    // Reset mesej
+    statusBox.style.display = "none";
+    statusBox.className = "application-status";
+    successBox.classList.remove("show");
 
-        if (!form.reportValidity()) return;
+    // Validasi
+    if (!job || !phoneInput || !consent) {
+        statusBox.textContent = "❌ Sila lengkapkan semua maklumat.";
+        statusBox.style.display = "block";
+        return;
+    }
 
-        const job = document.getElementById("selectedJob").value.trim();
-        const phone = document.getElementById("phoneNumber").value.trim();
-        const consent = document.getElementById("consentCheck").checked;
+    // Validasi format nombor telefon
+    const phoneRegex = /^(?:\+?60|0)?1\d{7,9}$/;
+    if (!phoneRegex.test('0' + phoneInput) && !phoneRegex.test(phoneInput)) {
+        statusBox.textContent = "❌ Sila masukkan nombor telefon yang sah.";
+        statusBox.style.display = "block";
+        return;
+    }
 
-        const submitButton = form.querySelector(".submit-button");
-        const status = document.getElementById("applicationStatus");
-        const successBox = document.getElementById("successBox");
+    // Kunci butang
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Sedang Menghantar...";
 
-        successBox.classList.remove("show");
-        status.style.display = "none";
+    try {
+        // ✅ HANTAR KE API SEBENAR
+        const response = await fetch("/api/apply", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                job: job,
+                phone: fullPhone,
+                consent: consent
+            })
+        });
 
-        if (!job || !phone || !consent) {
-            status.textContent = "Sila lengkapkan semua maklumat.";
-            status.style.display = "block";
-            return;
-        }
+        const result = await response.json();
 
-        submitButton.disabled = true;
-        submitButton.textContent = "Sedang Menghantar...";
-
-        try {
-            // Ganti dengan URL API sebenar apabila sedia
-            /*
-            const response = await fetch("/api/apply", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ job, phone, consent })
-            });
-
-            const result = await response.json();
-            if (!response.ok || result.success !== true) {
-                throw new Error(result.message || "Permohonan gagal dihantar.");
-            }
-            */
-
-            // Simulasi penghantaran
-            await new Promise(resolve => setTimeout(resolve, 1200));
-
-            // Simpan data
-            sessionStorage.setItem("applicationPhone", phone);
-            sessionStorage.setItem("applicationJob", job);
-
-            // Tunjuk kejayaan
+        if (result.success === true) {
+            // Berjaya
             form.style.display = "none";
             successBox.classList.add("show");
-
-        } catch (error) {
-            console.error("Error:", error);
-            status.textContent = error.message || "Tidak dapat menghubungi server. Sila cuba lagi.";
-            status.style.display = "block";
-            submitButton.disabled = false;
-            submitButton.textContent = "Hantar Permohonan";
+            if (result.reference) {
+                refDisplay.textContent = `No. Rujukan: ${result.reference}`;
+            }
+        } else {
+            // Gagal dari server
+            throw new Error(result.message || "Permohonan gagal dihantar.");
         }
-    });
+
+    } catch (error) {
+        console.error("Error:", error);
+        statusBox.textContent = "❌ " + error.message;
+        statusBox.style.display = "block";
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Hantar Permohonan";
+    }
+});
 </script>
 
 </body>
