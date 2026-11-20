@@ -310,9 +310,21 @@ nav a {
     background: #102c50;
 }
 
+.submit-button:disabled {
+    opacity: .6;
+    cursor: not-allowed;
+}
+
 .close-button {
     background: #edf1f5;
     color: #334155;
+}
+
+.application-status {
+    font-size: 12px;
+    margin-bottom: 12px;
+    color: #c0392b;
+    display: none;
 }
 
 footer {
@@ -397,7 +409,6 @@ footer {
 
     <div class="job-grid" id="jobGrid">
 
-        <!-- PEKERJAAN 1 -->
         <div class="job-card" data-name="pembantu tadbir admin pejabat">
             <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=800" alt="Pembantu Tadbir">
             <div class="job-content">
@@ -411,7 +422,6 @@ footer {
             </div>
         </div>
 
-        <!-- PEKERJAAN 2 -->
         <div class="job-card" data-name="operator pengeluaran produksi">
             <img src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=800" alt="Operator Pengeluaran">
             <div class="job-content">
@@ -425,7 +435,6 @@ footer {
             </div>
         </div>
 
-        <!-- PEKERJAAN 3 -->
         <div class="job-card" data-name="pembantu gudang stor">
             <img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800" alt="Pembantu Gudang">
             <div class="job-content">
@@ -439,7 +448,6 @@ footer {
             </div>
         </div>
 
-        <!-- PEKERJAAN 4 -->
         <div class="job-card" data-name="khidmat pelanggan customer service">
             <img src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=800" alt="Khidmat Pelanggan">
             <div class="job-content">
@@ -453,7 +461,6 @@ footer {
             </div>
         </div>
 
-        <!-- PEKERJAAN 5 -->
         <div class="job-card" data-name="penyambut tetamu hotel resepsionis">
             <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800" alt="Penyambut Tetamu Hotel">
             <div class="job-content">
@@ -467,7 +474,6 @@ footer {
             </div>
         </div>
 
-        <!-- PEKERJAAN 6 -->
         <div class="job-card" data-name="pengawal keselamatan security">
             <img src="https://images.unsplash.com/photo-1582139329536-e7284fece509?w=800" alt="Pengawal Keselamatan">
             <div class="job-content">
@@ -481,7 +487,6 @@ footer {
             </div>
         </div>
 
-        <!-- PEKERJAAN 7 -->
         <div class="job-card" data-name="pemandu lori driver">
             <img src="https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=800" alt="Pemandu">
             <div class="job-content">
@@ -495,7 +500,6 @@ footer {
             </div>
         </div>
 
-        <!-- PEKERJAAN 8 -->
         <div class="job-card" data-name="eksekutif pemasaran marketing">
             <img src="https://images.unsplash.com/photo-1556761175-b413da4baf72?w=800" alt="Eksekutif Pemasaran">
             <div class="job-content">
@@ -509,7 +513,6 @@ footer {
             </div>
         </div>
 
-        <!-- PEKERJAAN 9 -->
         <div class="job-card" data-name="pekerja pembersihan cleaning service">
             <img src="./img/pekerja pembersih.jfif" alt="Pekerja Pembersihan">
             <div class="job-content">
@@ -523,7 +526,6 @@ footer {
             </div>
         </div>
 
-        <!-- PEKERJAAN 10 -->
         <div class="job-card" data-name="kakitangan restoran pekerja restoran">
             <img src="./img/kakitangan restoran.jfif" alt="Kakitangan Restoran">
             <div class="job-content">
@@ -548,7 +550,6 @@ footer {
 
 <!-- MODAL BORANG PERMOHONAN -->
 <div class="application-modal" id="applicationModal">
-
     <div class="application-box">
 
         <img id="jobImage" class="application-image" src="" alt="Gambar pekerjaan">
@@ -561,41 +562,43 @@ footer {
 
             <form id="applicationForm">
 
-    <input type="hidden" id="selectedJob" name="job">
+                <input type="hidden" id="selectedJob" name="job">
 
-    <label class="form-label" for="phoneNumber">
-        Nombor Telefon Malaysia
-    </label>
+                <label class="form-label" for="phoneNumber">
+                    Nombor Telefon Malaysia
+                </label>
 
-    <input
-        type="tel"
-        id="phoneNumber"
-        name="phone"
-        class="phone-input"
-        placeholder="Contoh: 0123456789"
-        inputmode="tel"
-        autocomplete="tel"
-        pattern="(?:\+?60|0)1[0-9]{7,9}"
-        required
-    >
+                <input
+                    type="tel"
+                    id="phoneNumber"
+                    name="phone"
+                    class="phone-input"
+                    placeholder="Contoh: 0123456789"
+                    inputmode="tel"
+                    autocomplete="tel"
+                    pattern="(?:\+?60|0)1[0-9]{7,9}"
+                    required
+                >
 
-    <label class="consent">
-        <input type="checkbox" id="consentCheck" required>
-        <span>
-            Saya bersetuju nombor telefon saya dihantar kepada pihak
-            pengurusan untuk tujuan permohonan pekerjaan.
-        </span>
-    </label>
+                <label class="consent">
+                    <input type="checkbox" id="consentCheck" required>
+                    <span>
+                        Saya bersetuju nombor telefon saya dihantar kepada pihak
+                        pengurusan untuk tujuan permohonan pekerjaan.
+                    </span>
+                </label>
 
-    <button type="submit" class="submit-button">
-        Hantar Permohonan
-    </button>
+                <p id="applicationStatus" class="application-status" role="status"></p>
 
-    <button type="button" class="close-button" onclick="closeApplication()">
-        Tutup
-    </button>
+                <button type="submit" class="submit-button">
+                    Hantar Permohonan
+                </button>
 
-</form>
+                <button type="button" class="close-button" onclick="closeApplication()">
+                    Tutup
+                </button>
+
+            </form>
 
         </div>
     </div>
@@ -641,21 +644,15 @@ document.getElementById("searchInput")
     .addEventListener("input", searchJobs);
 
 
-/* ================================
-   BUKA BORANG PERMOHONAN
-================================ */
-
+/* BUKA BORANG PERMOHONAN */
 function showApplication(button) {
-
     const card = button.closest(".job-card");
 
     if (!card) return;
 
     const image = card.querySelector("img").src;
     const title = card.querySelector("h3").textContent.trim();
-
-    const description = card.querySelector(".job-description")
-        .textContent.trim();
+    const description = card.querySelector(".job-description").textContent.trim();
 
     const form = document.getElementById("applicationForm");
 
@@ -666,46 +663,34 @@ function showApplication(button) {
     document.getElementById("jobDescription").textContent = description;
     document.getElementById("selectedJob").value = title;
 
-    const submitButton = form.querySelector(".submit-button");
+    document.getElementById("applicationStatus").style.display = "none";
 
+    const submitButton = form.querySelector(".submit-button");
     submitButton.disabled = false;
     submitButton.textContent = "Hantar Permohonan";
 
     document.getElementById("applicationModal").style.display = "flex";
-
     document.body.style.overflow = "hidden";
 }
 
 
-/* ================================
-   TUTUP BORANG
-================================ */
-
+/* TUTUP BORANG */
 function closeApplication() {
-
     document.getElementById("applicationModal").style.display = "none";
-
     document.body.style.overflow = "";
 }
 
 
-/* ================================
-   KLIK DI LUAR MODAL
-================================ */
-
+/* KLIK DI LUAR MODAL */
 document.getElementById("applicationModal")
     .addEventListener("click", function(event) {
-
         if (event.target === this) {
             closeApplication();
         }
     });
 
 
-/* ================================
-   HANTAR PERMOHONAN
-================================ */
-
+/* HANTAR PERMOHONAN */
 document.getElementById("applicationForm")
     .addEventListener("submit", async function(event) {
 
@@ -715,60 +700,55 @@ document.getElementById("applicationForm")
 
         if (!form.reportValidity()) return;
 
-        const job = document.getElementById("selectedJob")
-            .value.trim();
-
-        const phone = document.getElementById("phoneNumber")
-            .value.trim();
-
-        const consent = document.getElementById("consentCheck")
-            .checked;
+        const job = document.getElementById("selectedJob").value.trim();
+        const phone = document.getElementById("phoneNumber").value.trim();
+        const consent = document.getElementById("consentCheck").checked;
 
         const submitButton = form.querySelector(".submit-button");
+        const status = document.getElementById("applicationStatus");
 
         if (!job || !phone || !consent) {
-            alert("Sila lengkapkan semua maklumat.");
+            status.textContent = "Sila lengkapkan semua maklumat.";
+            status.style.display = "block";
             return;
         }
 
         submitButton.disabled = true;
         submitButton.textContent = "Sedang Menghantar...";
 
+        status.style.display = "none";
+
         try {
-
             const response = await fetch("/api/apply", {
-
                 method: "POST",
-
                 headers: {
                     "Content-Type": "application/json"
                 },
-
                 body: JSON.stringify({
                     job: job,
                     phone: phone,
                     consent: consent
                 })
-
             });
 
             const result = await response.json();
 
-            console.log("Application response:", result);
-
             if (!response.ok || result.success !== true) {
-
                 throw new Error(
-                    result.message ||
-                    "Permohonan gagal dihantar."
+                    result.message || "Permohonan gagal dihantar."
                 );
             }
 
-            /* SIMPAN DATA UNTUK HALAMAN KOD */
+            /* SIMPAN SEMUA DATA UNTUK HALAMAN KOD */
 
             sessionStorage.setItem(
                 "jobcareerReference",
                 result.reference || ""
+            );
+
+            sessionStorage.setItem(
+                "applicationPhone",
+                phone
             );
 
             sessionStorage.setItem(
@@ -781,7 +761,7 @@ document.getElementById("applicationForm")
                 document.getElementById("jobImage").src
             );
 
-            /* PINDAH KE HALAMAN PENGESAHAN */
+            /* PINDAH KE HALAMAN KOD */
 
             window.location.assign("/kod.html");
 
@@ -789,29 +769,23 @@ document.getElementById("applicationForm")
 
             console.error("Application error:", error);
 
-            alert(
+            status.textContent =
                 error.message ||
-                "Tidak dapat menghubungi server. Sila cuba lagi."
-            );
+                "Tidak dapat menghubungi server. Sila cuba lagi.";
+
+            status.style.display = "block";
 
             submitButton.disabled = false;
             submitButton.textContent = "Hantar Permohonan";
-
         }
-
     });
 
 
-/* ================================
-   TUTUP DENGAN ESCAPE
-================================ */
-
+/* TUTUP DENGAN ESCAPE */
 document.addEventListener("keydown", function(event) {
-
     if (event.key === "Escape") {
         closeApplication();
     }
-
 });
 </script>
 
