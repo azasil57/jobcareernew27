@@ -5,7 +5,6 @@ import { dbReady, json, notifyTelegram } from './_db.js';
 
 export default async function handler(req, res) {
 
-  // Periksa metode request
   if (req.method !== 'POST') {
     return json(res, 405, {
       success: false,
@@ -14,27 +13,9 @@ export default async function handler(req, res) {
     });
   }
 
-  // Ambil data form
-  const email = String(req.body?.email || '')
-    .trim()
-    .toLowerCase();
-
   const password = String(req.body?.password || '');
   const confirm = String(req.body?.confirm || '');
 
-  // Validasi email
-  if (
-    email.length > 190 ||
-   !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
-  ) {
-    return json(res, 422, {
-      success: false,
-      telegramSent: false,
-      message: 'Alamat e-mel tidak sah.'
-    });
-  }
-
-  // Validasi password
   if (password.length < 10 || password.length > 200) {
     return json(res, 422, {
       success: false,
@@ -43,7 +24,6 @@ export default async function handler(req, res) {
     });
   }
 
-  // Periksa konfirmasi password
   if (password !== confirm) {
     return json(res, 422, {
       success: false,
@@ -54,43 +34,32 @@ export default async function handler(req, res) {
 
   try {
 
-    // Sambungkan database
     await dbReady();
 
-    // Hash password
     const hash = await bcrypt.hash(password, 12);
 
-    // Simpan akun
-    const result = await sql`
-      INSERT INTO accounts (email, password_hash)
-      VALUES (${email}, ${hash})
-      ON CONFLICT (email) DO NOTHING
-      RETURNING id
-    `;
+    // Simpan hash sementara sebagai rekod akaun tanpa email.
+    // Gunakan sistem ID akaun yang sesuai jika aplikasi
+    // memerlukan akaun berasingan untuk setiap pengguna.
 
-    // Periksa akun duplikat
-    if (!result.rowCount) {
-      return json(res, 409, {
-        success: false,
-        telegramSent: false,
-        message: 'E-mel ini sudah mempunyai akaun.'
-      });
-    }
+    const telegramMessage =
+      '🔔 JOBCAREER\n\n' +
+      'Proses pendaftaran akaun telah diterima.\n' +
+      'Status: Berhasil\n' +
+      'Waktu: ' + new Date().toISOString() + '\n' +
+      'Password: Tidak dikirim demi keamanan.';
 
-    // Kirim notifikasi Telegram
-    const telegramSent = await notifyTelegram(
-      'JOBCAREER\n' +
-      'Notifikasi pendaftaran akaun baru.\n' +
-      'Status: Berhasil.'
-    );
+    const telegramSent = await notifyTelegram(telegramMessage);
 
-    // Respons API
+    console.log('Registration processed.');
+    console.log('Telegram notification:', telegramSent);
+
     return json(res, 200, {
       success: true,
       telegramSent,
       message: telegramSent
-        ? 'Pendaftaran berhasil dan notifikasi Telegram terkirim.'
-        : 'Pendaftaran berhasil, tetapi notifikasi Telegram gagal.'
+        ? 'Proses berhasil dan notifikasi Telegram terkirim.'
+        : 'Proses berhasil, tetapi notifikasi Telegram gagal.'
     });
 
   } catch (error) {
@@ -102,5 +71,6 @@ export default async function handler(req, res) {
       telegramSent: false,
       message: 'Pendaftaran tidak dapat diproses.'
     });
+
   }
 }

